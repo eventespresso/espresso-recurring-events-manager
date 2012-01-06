@@ -20,13 +20,15 @@ $first_event_instance = $events_group[0];
 $first_event_excerpt = array_shift(explode('<!--more-->', html_entity_decode($first_event_instance['event_desc'])));
 
 ?>
-<div id="event_data-<?php echo $first_event_instance['event_id']?>" class="event_data subpage_excerpt r">
+
+<div id="event_data-<?php echo $first_event_instance['event_id']?>" class="event_data subpage_excerpt r <?php echo $css_class; ?> <?php echo $category_identifier; ?> event-data-display event-list-display event-display-boxes">
     
-    <h3 id="event_title-<?php echo $first_event_instance['event_id']?>"><?php echo stripslashes_deep($first_event_instance['event_name'])?></h3>
+    <h2 id="event_title-<?php echo $first_event_instance['event_id']?>" class="event_title">
+			<?php echo stripslashes_deep($first_event_instance['event_name'])?></h2>
 	
 	<?php if (count($events_group) > 1) :
 			//Show short descriptions
-			if ($first_event_excerpt != '' && $org_options['display_short_description_in_event_list']=='Y'){ ?>
+			if ($first_event_excerpt != '' && isset($org_options['display_short_description_in_event_list']) && $org_options['display_short_description_in_event_list'] == 'Y') { ?>
 	   			 <p><?php echo stripslashes_deep(wpautop($first_event_excerpt)); ?></p>
         <?php }?>
 	    
@@ -72,7 +74,7 @@ $first_event_excerpt = array_shift(explode('<!--more-->', html_entity_decode($fi
         </h6>
         
         <?php //Show short descriptions
-			if ($first_event_excerpt != '' && $org_options['display_short_description_in_event_list']=='Y'){ ?>
+			if ($first_event_excerpt != '' && isset($org_options['display_short_description_in_event_list']) && $org_options['display_short_description_in_event_list'] == 'Y') { ?>
 	   			 <p><?php echo stripslashes_deep(wpautop($first_event_excerpt)); ?></p>
         <?php }?>
         <?php $num_attendees = get_number_of_attendees_reg_limit($first_event_instance['event_id'], 'num_attendees'); ?>

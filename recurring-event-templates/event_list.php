@@ -28,7 +28,7 @@ if (!function_exists('display_all_events')) {
 }
 
 if (!function_exists('display_event_espresso_categories')) {
-	function display_event_espresso_categories($event_category_id="null"){
+	function display_event_espresso_categories($event_category_id="null", $css_class=NULL){
 		global $wpdb;
 		if ($event_category_id != "null"){
 		    
@@ -40,24 +40,25 @@ if (!function_exists('display_event_espresso_categories')) {
 			$sql .= " WHERE c.category_identifier = '" . $event_category_id . "' ";
 			$sql .= $display_recurrence_event == false ? " AND e.recurrence_id = '0' " : '';
 			$sql .= " ORDER BY date(start_date), id ASC";
-			event_espresso_get_event_details($sql);//This function is located below
+			event_espresso_get_event_details($sql, $css_class);//This function is located below
 		}
 	}
 }
 
 //Events Listing - Shows the events on your page. 
 if (!function_exists('event_espresso_get_event_details')) {
-	function event_espresso_get_event_details($sql){
+	function event_espresso_get_event_details($sql, $css_class=NULL, $allow_override=0){
 		
 		global $wpdb, $org_options;
 		//echo 'This page is located in ' . get_option( 'upload_path' );
-		$event_page_id = $org_options['event_page_id'];
-		$currency_symbol = $org_options['currency_symbol'];
-		$events = $wpdb->get_results($sql);
-		$category_id = $wpdb->last_result[0]->id;
-		$category_name = $wpdb->last_result[0]->category_name;
-		$category_desc = html_entity_decode( wpautop($wpdb->last_result[0]->category_desc) );
-		$display_desc = $wpdb->last_result[0]->display_desc;
+    $event_page_id = $org_options['event_page_id'];
+    $currency_symbol = isset($org_options['currency_symbol']) ? $org_options['currency_symbol'] : '';
+    $events = $wpdb->get_results($sql);
+    $category_id = isset($wpdb->last_result[0]->id) ? $wpdb->last_result[0]->id : '';
+    $category_name = isset($wpdb->last_result[0]->category_name) ? $wpdb->last_result[0]->category_name : '';
+    $category_identifier = isset($wpdb->last_result[0]->category_identifier) ? $wpdb->last_result[0]->category_identifier : '';
+    $category_desc = isset($wpdb->last_result[0]->category_desc) ? html_entity_decode(wpautop($wpdb->last_result[0]->category_desc)) : '';
+    $display_desc = isset($wpdb->last_result[0]->display_desc) ? $wpdb->last_result[0]->display_desc : '';
 		
 		/* group recuring events */
 		$events_type_index = -1;

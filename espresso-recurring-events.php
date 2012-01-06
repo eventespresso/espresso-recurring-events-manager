@@ -4,9 +4,9 @@
   Plugin URI: http://eventespresso.com/
   Description: Recurring Events addon for Event Espresso.
 
-  Version: 1.1.4
+  Version: 1.1.5
 
-  Author: Abel Sekepyan
+  Author: Event Espresso
   Author URI: http://www.eventespresso.com
 
   Copyright (c) 2010 Abel Sekepyan  All Rights Reserved.
