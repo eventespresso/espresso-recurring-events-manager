@@ -462,7 +462,8 @@ function espresso_register_rem_metaboxes() {
 	$screen = get_current_screen();
 	if ($screen->id == 'toplevel_page_events'
 					&& isset($_REQUEST['action'])
-					&& $_REQUEST['action'] == 'edit') {
+					&& ($_REQUEST['action'] == 'edit'
+					|| $_REQUEST['action'] == 'add_new_event')) {
 		require_once(EVENT_ESPRESSO_RECURRENCE_FULL_PATH . 'functions/re_view_functions.php');
 		add_meta_box('espresso_event_editor_rem', __('Recurring Event Manager', 'event_espresso'), 'event_espresso_re_form', 'toplevel_page_events', 'normal', 'core');
 	}
