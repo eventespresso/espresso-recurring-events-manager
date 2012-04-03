@@ -132,16 +132,16 @@ if (!function_exists('recurring_days')) {
 				'type' => $_POST['recurrence_type'],
 				'frequency' => $_POST['recurrence_frequency'],
 				'interval' => $_POST['recurrence_interval'],
-				'weekdays' => $_POST['recurrence_weekday'],
+				'weekdays' => isset($_POST['recurrence_weekday'])?$_POST['recurrence_weekday']:'',
 				'repeat_by' => $_POST['recurrence_repeat_by'],
-				'recurrence_regis_date_increment' => $_POST['recurrence_regis_date_increment'],
-				'recurrence_visibility' => $_POST['recurrence_visibility'],
-				'recurrence_id' => $_POST['recurrence_id']
+				'recurrence_regis_date_increment' => isset($_POST['recurrence_regis_date_increment'])?$_POST['recurrence_regis_date_increment']:'N',
+				'recurrence_visibility' => isset($_POST['recurrence_visibility'])?$_POST['recurrence_visibility']:'',
+				'recurrence_id' => isset($_POST['recurrence_id'])?$_POST['recurrence_id']:''
 		);
 
 
 
-		if ($_POST['recurrence_apply_changes_to'] == 3) {
+		if (isset($_POST['recurrence_apply_changes_to']) && $_POST['recurrence_apply_changes_to'] == 3) {
 			// This and upcoming events based on recurrence id and start_date >=start_date
 			$re_params['start_date'] = $_POST['start_date'];
 		}

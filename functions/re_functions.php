@@ -27,7 +27,7 @@ function add_recurrence_master_record() {
 
     global $wpdb;
 
-    $recurrence_weekday = serialize( $_POST['recurrence_weekday'] );
+    $recurrence_weekday = isset($_POST['recurrence_weekday'])?serialize($_POST['recurrence_weekday']):'';//serialize( $_POST['recurrence_weekday'] );
     $recurrence_manual_dates = $_POST['recurrence_type'] == 'm' ? serialize( $_POST['recurrence_manual_dates']) . serialize($_POST['recurrence_manual_end_dates'] ) : NULL;
 
     $SQL = 'INSERT INTO ' . EVENT_ESPRESSO_RECURRENCE_TABLE . ' (
@@ -54,7 +54,7 @@ function add_recurrence_master_record() {
     $SQL .= "'" . $wpdb->escape( $_POST['recurrence_repeat_by'] ) . "',";
     $SQL .= "'" . $wpdb->escape( $_POST['recurrence_regis_date_increment'] ) . "',";
     $SQL .= "'" . $recurrence_manual_dates . "',";
-    $SQL .= "'" . $wpdb->escape( $_POST['recurrence_visibility'] ) . "')";
+    $SQL .= "'" . $wpdb->escape(isset($_POST['recurrence_visibility'])?$_POST['recurrence_visibility']:'' ) . "')";
 
     $wpdb->query( $SQL );
 
@@ -74,7 +74,7 @@ function update_recurrence_master_record() {
     //echo_f('',$_POST);
 
     global $wpdb;
-$wpdb->show_errors();
+    $wpdb->show_errors();
     $recurrence_weekday = serialize( $_POST['recurrence_weekday'] );
     $recurrence_manual_dates = $_POST['recurrence_type'] == 'm' ? serialize( $_POST['recurrence_manual_dates']) . serialize($_POST['recurrence_manual_end_dates'] ) : NULL;
 
