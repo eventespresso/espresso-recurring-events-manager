@@ -90,8 +90,10 @@ function update_recurrence_master_record() {
                 'recurrence_repeat_by' => $_POST['recurrence_repeat_by'],
                 'recurrence_regis_date_increment' => $_POST['recurrence_regis_date_increment'],
                 'recurrence_manual_dates' => $recurrence_manual_dates,
-                'recurrence_visibility' => $_POST['recurrence_visibility']
-            ), array( 'recurrence_id' => $_POST['recurrence_id'] ), array( '%s','%s','%s','%s','%s','%d','%s','%s','%s','%s','%s' ), array( '%d' ) );
+                'recurrence_visibility' => $_POST['recurrence_visibility'],
+                'recurrence_regis_start_date' => $_POST['recurrence_regis_start_date'],
+                'recurrence_regis_end_date' => $_POST['recurrence_regis_end_date']
+            ), array( 'recurrence_id' => $_POST['recurrence_id'] ), array( '%s','%s','%s','%s','%s','%d','%s','%s','%s','%s','%s','%s','%s' ), array( '%d' ) );
 
     //echo $wpdb->last_query;
 
@@ -136,11 +138,13 @@ function recurrence_form_modified( $params = array( ) ) {
                                                     recurrence_repeat_by = %s AND
                                                     recurrence_regis_date_increment = %s AND
                                                     recurrence_manual_dates = %s AND
-                                                    recurrence_visibility = %s
+                                                    recurrence_visibility = %s AND
+                                                    recurrence_regis_start_date = %s AND
+                                                    recurrence_regis_end_date = %s
                                                     ",
                                                     $recurrence_id, $start_date,$event_end_date,$end_date,$frequency,$interval,
                                                     $recurrence_type,$weekdays,$repeat_by,$recurrence_regis_date_increment,
-                                                    $recurrence_manual_dates,$recurrence_visibility
+                                                    $recurrence_manual_dates,$recurrence_visibility,$recurrence_regis_start_date,$recurrence_regis_end_date
             
             ) );
 

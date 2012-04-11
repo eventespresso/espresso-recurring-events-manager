@@ -11,9 +11,9 @@
  * @link		http://eventespresso.com/support/
  */
 function event_espresso_re_form($event = NULL) {
-    $recurrence_id = 0;
+    $recurrence_id = 0; 
     if ( $event !== NULL ) {
-        $recurrence_id = $event->recurrence_id;
+        $recurrence_id = $event->recurrence_id; 
     }
 	if (!function_exists('recurrence_table_manual'))
 		require('re_functions.php');
