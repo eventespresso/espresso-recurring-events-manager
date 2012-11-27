@@ -30,7 +30,7 @@ $first_event_excerpt = array_shift(explode('<!--more-->', html_entity_decode($fi
 	<?php if (count($events_group) > 1) :
 			//Show short descriptions
 			if ($first_event_excerpt != '' && isset($org_options['display_short_description_in_event_list']) && $org_options['display_short_description_in_event_list'] == 'Y') { ?>
-	   			 <p><?php echo espresso_format_content($first_event_excerpt)); ?></p>
+	   			 <p><?php echo espresso_format_content($first_event_excerpt); ?></p>
         <?php }?>
 	    
 	    <script type="text/javascript">
