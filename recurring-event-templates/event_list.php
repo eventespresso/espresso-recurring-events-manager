@@ -22,6 +22,10 @@ if (!function_exists('event_espresso_get_event_details')) {
 	function event_espresso_get_event_details( $attributes ) {
 		//echo $sql; 
 		global $wpdb, $org_options, $events_in_session;
+		
+		$template_name = ( 'event_list_display.php' );
+		$path = locate_template( $template_name );
+		
 		$multi_reg = false;
 		if (function_exists('event_espresso_multi_reg_init')) {
 			$multi_reg = true;
@@ -270,7 +274,11 @@ if (!function_exists('event_espresso_get_event_details')) {
 		
 		/* group recurring events */
 		foreach ($events_of_same_type as $events_group) {
-		    include('event_list_display.php');
+		    if ( empty( $path ) ) {
+				include( $template_name );
+			} else {
+				include( $path );
+			}
     }
 		/* end group recurring events */
 		
