@@ -42,8 +42,7 @@ function add_recurrence_master_record() {
                                         recurrence_weekday,
                                         recurrence_repeat_by,
                                         recurrence_regis_date_increment,
-                                        recurrence_manual_dates,
-                                        recurrence_visibility
+                                        recurrence_manual_dates
                                         ) ';
 
     $SQL .= ' VALUES (' . "'" . $wpdb->escape( $_POST['recurrence_start_date'] ) . "', " . "'" . $wpdb->escape( $_POST['recurrence_event_end_date'] ) . "', " . "'" . $wpdb->escape( $_POST['recurrence_end_date'] ) . "', ";
@@ -53,8 +52,7 @@ function add_recurrence_master_record() {
     $SQL .= "'" . $recurrence_weekday . "', ";
     $SQL .= "'" . $wpdb->escape( $_POST['recurrence_repeat_by'] ) . "',";
     $SQL .= "'" . $wpdb->escape( $_POST['recurrence_regis_date_increment'] ) . "',";
-    $SQL .= "'" . $recurrence_manual_dates . "',";
-    $SQL .= "'" . $wpdb->escape( $_POST['recurrence_visibility'] ) . "')";
+    $SQL .= "'" . $recurrence_manual_dates . "')";
 
     $wpdb->query( $SQL );
 
@@ -90,10 +88,9 @@ $wpdb->show_errors();
                 'recurrence_repeat_by' => $_POST['recurrence_repeat_by'],
                 'recurrence_regis_date_increment' => $_POST['recurrence_regis_date_increment'],
                 'recurrence_manual_dates' => $recurrence_manual_dates,
-                'recurrence_visibility' => ''/*$_POST['recurrence_visibility']*/,
                 'recurrence_regis_start_date' => $_POST['recurrence_regis_start_date'],
                 'recurrence_regis_end_date' => $_POST['recurrence_regis_end_date']
-            ), array( 'recurrence_id' => $_POST['recurrence_id'] ), array( '%s','%s','%s','%s','%s','%d','%s','%s','%s','%s','%s','%s','%s' ), array( '%d' ) );
+            ), array( 'recurrence_id' => $_POST['recurrence_id'] ), array( '%s','%s','%s','%s','%s','%d','%s','%s','%s','%s','%s','%s' ), array( '%d' ) );
 
     //echo $wpdb->last_query;
 
@@ -123,7 +120,6 @@ function recurrence_form_modified( $params = array( ) ) {
 
     $weekdays = serialize( $weekdays );
     $recurrence_manual_dates = ($recurrence_type == 'm') ? serialize( $recurrence_manual_dates) . serialize($recurrence_manual_end_dates ) : NULL;
-    //$recurrence_visibility = ($recurrence_visibility == '')?'': $recurrence_visibility;
 
     $result = $wpdb->get_row($wpdb->prepare("SELECT recurrence_id FROM " . EVENT_ESPRESSO_RECURRENCE_TABLE . " WHERE
                                                     recurrence_id = %d AND
@@ -137,13 +133,12 @@ function recurrence_form_modified( $params = array( ) ) {
                                                     recurrence_repeat_by = %s AND
                                                     recurrence_regis_date_increment = %s AND
                                                     recurrence_manual_dates = %s AND
-                                                    recurrence_visibility = %s  AND
                                                     recurrence_regis_start_date = %s AND
                                                     recurrence_regis_end_date = %s
                                                     ",
                                                     $recurrence_id, $start_date,$event_end_date,$end_date,$frequency,$interval,
                                                     $recurrence_type,$weekdays,$repeat_by,$recurrence_regis_date_increment,
-                                                    $recurrence_manual_dates,$recurrence_visibility,$registration_start,$registration_end
+                                                    $recurrence_manual_dates,$registration_start,$registration_end
             
             ) );
 
@@ -192,33 +187,22 @@ function find_recurrence_dates( $params = array( ) ) {
         //for ( $i = $interval; $i <= $date_difference; $i = $i + $interval ) {
         for ( $i = 0; $i <= $date_difference; $i = $i + $interval ) {
 
-
-
             $recurrence_date = date( "Y-m-d", strtotime( "+$i day", strtotime( $start_date ) ) );
             $recurrence_event_end_date = $event_end_date == ''?$recurrence_date:date( "Y-m-d", strtotime( "+$i day", strtotime( $event_end_date ) ) );
-
 
             $recurrence_dates[$recurrence_date]['recurrence_id'] = $params['recurrence_id'];
             $recurrence_dates[$recurrence_date]['start_date'] = $recurrence_date;
             $recurrence_dates[$recurrence_date]['event_end_date'] = $recurrence_event_end_date;
-            if ( $recurrence_regis_date_increment == 'N' )
-            {
+            if ( $recurrence_regis_date_increment == 'N' ){
 
                 $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( "+$i day", strtotime( $registration_start ) ) );
                 $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( "+$i day", strtotime( $registration_end ) ) );
-            }
-            else
-            {
+            }else{
                 $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( $registration_start ) );
                 $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
             }
-
-            if ( $recurrence_visibility != '' )
-            {
-                $recurrence_dates[$recurrence_date]['visible_on'] = date( "Y-m-d", strtotime( "-$recurrence_visibility day", strtotime( $recurrence_dates[$recurrence_date]['registration_start'] ) ) );
-            } else
-                $recurrence_dates[$recurrence_date]['visible_on'] = date( "Y-m-d" );
-        }
+				
+		}
     }
 
     /*
@@ -227,15 +211,14 @@ function find_recurrence_dates( $params = array( ) ) {
      * --------------------------
      */
 
-    if ( $frequency == 'w' && count( $weekdays ) > 0 )
-    {
+    if ( $frequency == 'w' && count( $weekdays ) > 0 ){
         //Have to do this in order for ajax to work
         //jQuery won't recognize array fields[] with a preassigned key.  Ex. on the form, if I put, name="weekday[0]", jquery can't find the value
         //will look for a fix
 		if (empty($weekdays)){
 				return '<p>'.__('Please select a day of the week above.', 'event_espresso').'</p>';
 			}
-			
+			if (!is_array($weekdays)) $weekdays = array(1);
         foreach ( $weekdays as $k => $v )
             $weekdays_shifted[$v] = $v;
 
@@ -264,30 +247,22 @@ function find_recurrence_dates( $params = array( ) ) {
                 $recurrence_date_new = date( "Y-m-d", strtotime( "+$v day", strtotime( $recurrence_first_weekday ) ) );
 
                 //Exclude days that fall before the first day of the events
-                if ( $recurrence_date_new >= $start_date && $recurrence_date_new <= $end_date )
-                {
+                if ( $recurrence_date_new >= $start_date && $recurrence_date_new <= $end_date ){
 
                     $recurrence_dates[$recurrence_date_new]['recurrence_id'] = $params['recurrence_id'];
                     $recurrence_dates[$recurrence_date_new]['start_date'] = $recurrence_date_new;
                     $recurrence_dates[$recurrence_date_new]['event_end_date'] = $event_end_date =='' ? $recurrence_date_new : date( "Y-m-d", strtotime( "+$individual_event_duration day", strtotime( $recurrence_date_new ) ) );
 
                     /* Are all events available between the two registration dates or should they increment? */
-                    if ( $recurrence_regis_date_increment == 'N' )
-                    {
+                    if ( $recurrence_regis_date_increment == 'N' ){
                         $recurrance_date_difference = get_difference( $start_date, $recurrence_date_new, 3 );
                         $recurrence_dates[$recurrence_date_new]['registration_start'] = date( "Y-m-d", strtotime( "+$recurrance_date_difference day", strtotime( $registration_start ) ) );
                         $recurrence_dates[$recurrence_date_new]['registration_end'] = date( "Y-m-d", strtotime( "+$recurrance_date_difference day", strtotime( $registration_end ) ) );
-                    }
-                    else
-                    {
+                    }else{
                         $recurrence_dates[$recurrence_date_new]['registration_start'] = date( "Y-m-d", strtotime( $registration_start ) );
                         $recurrence_dates[$recurrence_date_new]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
                     }
-                    if ( $recurrence_visibility != '' )
-                    {
-                        $recurrence_dates[$recurrence_date_new]['visible_on'] = date( "Y-m-d", strtotime( "-$recurrence_visibility day", strtotime( $recurrence_dates[$recurrence_date_new]['registration_start'] ) ) );
-                    } else
-                        $recurrence_dates[$recurrence_date_new]['visible_on'] = date( "Y-m-d" );
+                    
                 }
             }
 
@@ -308,8 +283,7 @@ function find_recurrence_dates( $params = array( ) ) {
 
         $individual_event_duration = get_difference( $start_date, $event_end_date, 3 ); //in days
         /* if by day of month (i.e. repeats on the same day every month) */
-        if ( $repeat_by == 'dom' )
-        {
+        if ( $repeat_by == 'dom' ){
 
             for ( $i = 0; $i <= $month_difference; $i = $i + $interval ) {
                 $recurrence_date = date( "Y-m-d", strtotime( "+$i month", strtotime( $start_date ) ) );
@@ -318,26 +292,16 @@ function find_recurrence_dates( $params = array( ) ) {
                 $recurrence_dates[$recurrence_date]['recurrence_id'] = $params['recurrence_id'];
                 $recurrence_dates[$recurrence_date]['event_end_date'] = $event_end_date =='' ? $recurrence_date :date( "Y-m-d", strtotime( "+$individual_event_duration day", strtotime( $recurrence_date ) ) );
                 
-                if ( $recurrence_regis_date_increment == 'N' )
-                {
+                if ( $recurrence_regis_date_increment == 'N' ){
                     $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( "+$i month", strtotime( $registration_start ) ) );
                     $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( "+$i month", strtotime( $registration_end ) ) );
-                }
-                else
-                {
+                }else{
                     $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( $registration_start ) );
                     $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
                 }
 
-                if ( $recurrence_visibility != '' )
-                {
-                    $recurrence_dates[$recurrence_date]['visible_on'] = date( "Y-m-d", strtotime( "-$recurrence_visibility day", strtotime( $recurrence_dates[$recurrence_date]['registration_start'] ) ) );
-                } else
-                    $recurrence_dates[$recurrence_date]['visible_on'] = date( "Y-m-d" );
             }
-        }
-        else
-        {
+        }else{
             /* get the string representation of the weekday of the first event date */
             $week_number = week_in_the_month( $start_date );
 
@@ -347,13 +311,11 @@ function find_recurrence_dates( $params = array( ) ) {
                 /* find the next event date */
                 $recurrence_date = date( "Y-m-d", strtotime( "$week_number of $next_month" ) );
 				$of_check = strtotime($recurrence_date);
-				if ( $of_check <= 0 )
-				{
+				if ( $of_check <= 0 ){
 					$recurrence_date = date( "Y-m-d", strtotime( "$week_number  $next_month" ) );
 				}
 				$check_again = strtotime($recurrence_date);
-				if ( $check_again <= 0 )
-				{
+				if ( $check_again <= 0 ){
 					die("Failed to calculate date in Event Espresso > Recurrence Manager > Re-calculation function");
 				}
                 $recurrence_dates[$recurrence_date]['start_date'] = $recurrence_date;
@@ -364,19 +326,12 @@ function find_recurrence_dates( $params = array( ) ) {
 
                     $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( "+$i month", strtotime( $registration_start ) ) );
                     $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( "+$i month", strtotime( $registration_end ) ) );
-                }
-                else
-                {
+                }else{
 
                     $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( $registration_start ) );
                     $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
                 }
-
-                if ( $recurrence_visibility != '' )
-                {
-                    $recurrence_dates[$recurrence_date]['visible_on'] = date( "Y-m-d", strtotime( "-$recurrence_visibility day", strtotime( $recurrence_dates[$recurrence_date]['registration_start'] ) ) );
-                } else
-                    $recurrence_dates[$recurrence_date]['visible_on'] = date( "Y-m-d" );
+                
             }
         }
     }
@@ -423,8 +378,7 @@ function find_recurrence_manual_dates( $params = array( ) ) {
 
     foreach ( $recurrence_manual_dates as $k => $v ) {
 
-        if ( $v != '' )
-        {
+        if ( $v != '' ){
 
             $date_difference = get_difference( $start_date, $v, 3 );
 
@@ -435,18 +389,11 @@ function find_recurrence_manual_dates( $params = array( ) ) {
             {
                 $recurrence_dates[$v]['registration_start'] = date( "Y-m-d", strtotime( "+$date_difference day", strtotime( $registration_start ) ) );
                 $recurrence_dates[$v]['registration_end'] = date( "Y-m-d", strtotime( "+$date_difference day", strtotime( $registration_end ) ) );
-            }
-            else
-            {
+            }else{
                 $recurrence_dates[$v]['registration_start'] = date( "Y-m-d", strtotime( $registration_start ) );
                 $recurrence_dates[$v]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
             }
-
-            if ( $recurrence_visibility != '' )
-            {
-                $recurrence_dates[$v]['visible_on'] = date( "Y-m-d", strtotime( "-$recurrence_visibility day", strtotime( $recurrence_dates[$v]['registration_start'] ) ) );
-            } else
-                $recurrence_dates[$v]['visible_on'] = date( "Y-m-d" );
+            
         }
     }
 
