@@ -67,12 +67,9 @@ define( "EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION", '1.1.7' );
 
 define( "EVENT_ESPRESSO_RECURRENCE_DATE_FORMAT", 'D, m/d/Y' );
 
-if ( !function_exists( 'event_espresso_re_install' ) )
-{
-
+if ( !function_exists( 'event_espresso_re_install' ) ){
 
     function event_espresso_re_install() {
-
 
         update_option( 'event_espresso_re_version', EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION );
         update_option( 'event_espresso_re_active', 1 );
@@ -123,9 +120,7 @@ if ( !function_exists( 'event_espresso_re_install' ) )
 
 }
 
-if ( !function_exists( 'event_espresso_re_deactivate' ) )
-{
-
+if ( !function_exists( 'event_espresso_re_deactivate' ) ){
 
     function event_espresso_re_deactivate() {
 
@@ -136,9 +131,7 @@ if ( !function_exists( 'event_espresso_re_deactivate' ) )
 
 add_action( 'wp_ajax_show_recurring_dates', 'recurring_days' );
 
-if ( !function_exists( 'recurring_days' ) )
-{
-
+if ( !function_exists( 'recurring_days' ) ){
 
     function recurring_days() {
         global $wpdb;
