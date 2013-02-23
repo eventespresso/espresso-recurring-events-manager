@@ -21,15 +21,16 @@ $first_event_excerpt = array_shift(explode('<!--more-->', html_entity_decode($fi
 
 ?>
 
-<div id="event_data-<?php echo $first_event_instance['event_id']?>" class="event_data subpage_excerpt r <?php echo $css_class; ?> <?php echo $category_identifier; ?> event-data-display event-list-display event-display-boxes">
+<div id="event_data-<?php echo $first_event_instance['event_id']?>" class="event_data subpage_excerpt r <?php echo $css_class; ?> <?php echo $category_identifier; ?> event-data-display event-list-display event-display-boxes ui-widget">
     
-    <h2 id="event_title-<?php echo $first_event_instance['event_id']?>" class="event_title">
-			<?php echo stripslashes_deep($first_event_instance['event_name'])?></h2>
+    <h3 id="event_title-<?php echo $first_event_instance['event_id']?>" class="event_title ui-widget-header ui-corner-top">
+			<?php echo stripslashes_deep($first_event_instance['event_name'])?></h3>
+			<div class="event-data-display ui-widget-content ui-corner-bottom">
 	
 	<?php if (count($events_group) > 1) :
 			//Show short descriptions
 			if ($first_event_excerpt != '' && isset($org_options['display_short_description_in_event_list']) && $org_options['display_short_description_in_event_list'] == 'Y') { ?>
-	   			 <p><?php echo stripslashes_deep(wpautop($first_event_excerpt)); ?></p>
+	   			 <p><?php echo espresso_format_content($first_event_excerpt); ?></p>
         <?php }?>
 	    
 	    <script type="text/javascript">
@@ -89,4 +90,5 @@ $first_event_excerpt = array_shift(explode('<!--more-->', html_entity_decode($fi
         <?php endif; ?>
     <?php endif; ?>
 
+</div>
 </div>
