@@ -27,7 +27,7 @@ function add_recurrence_master_record() {
 
     global $wpdb;
 
-    $recurrence_weekday = serialize( $_POST['recurrence_weekday'] );
+    $recurrence_weekday = isset($_POST['recurrence_weekday']) ? serialize( $_POST['recurrence_weekday'] ) : '';
     $recurrence_manual_dates = $_POST['recurrence_type'] == 'm' ? serialize( $_POST['recurrence_manual_dates']) . serialize($_POST['recurrence_manual_end_dates'] ) : NULL;
 
     $SQL = 'INSERT INTO ' . EVENT_ESPRESSO_RECURRENCE_TABLE . ' (
