@@ -73,23 +73,22 @@ if ( !function_exists( 'event_espresso_re_install' )) {
 
         $table_name = "events_recurrence";
         $table_version = EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION;
-		$sql = "CREATE TABLE " . $table_name . " (
-	               `recurrence_id` int(11) NOT NULL AUTO_INCREMENT,
-                      `recurrence_start_date` date NOT NULL,
-                      `recurrence_event_end_date` date NOT NULL,
-                      `recurrence_end_date` date NOT NULL,
-                      `recurrence_regis_start_date` date NOT NULL,
-                      `recurrence_regis_end_date` date NOT NULL,
-                      `recurrence_frequency` tinytext NOT NULL,
-                      `recurrence_interval` tinyint(4) NOT NULL,
-                      `recurrence_weekday` varchar(255) NOT NULL,
-                      `recurrence_type` tinytext NOT NULL,
-                      `recurrence_repeat_by` tinytext NOT NULL,
-                      `recurrence_regis_date_increment` tinytext NOT NULL,
-                      `recurrence_manual_dates` LONGTEXT NULL,
-                      `recurrence_visibility` varchar(2) DEFAULT NULL,
-                      PRIMARY KEY (`recurrence_id`),
-                      UNIQUE KEY `recurrence_id` (`recurrence_id`))";
+		$sql = "recurrence_id int(11) NOT NULL AUTO_INCREMENT,
+                      recurrence_start_date date NOT NULL,
+                      recurrence_event_end_date date NOT NULL,
+                      recurrence_end_date date NOT NULL,
+                      recurrence_regis_start_date date NOT NULL,
+                      recurrence_regis_end_date date NOT NULL,
+                      recurrence_frequency tinytext NOT NULL,
+                      recurrence_interval tinyint(4) NOT NULL,
+                      recurrence_weekday varchar(255) NOT NULL,
+                      recurrence_type tinytext NOT NULL,
+                      recurrence_repeat_by tinytext NOT NULL,
+                      recurrence_regis_date_increment tinytext NOT NULL,
+                      recurrence_manual_dates LONGTEXT NULL,
+                      recurrence_visibility varchar(2) DEFAULT NULL,
+                      PRIMARY KEY  (recurrence_id),
+                      UNIQUE KEY  recurrence_id (recurrence_id)";
 
 		if ( ! function_exists( 'event_espresso_run_install' )) {
 			require_once( EVENT_ESPRESSO_PLUGINFULLPATH . 'includes/functions/database_install.php' ); 		
@@ -165,3 +164,19 @@ function espresso_re_styles(){
 	}
 }
 add_action('admin_print_styles', 'espresso_re_styles');
+
+
+
+
+/**
+ *         captures plugin activation errors for debugging
+ *
+ *         @access public
+ *         @return void
+ */
+function espresso_recurrence_plugin_activation_errors() {
+    if ( WP_DEBUG === TRUE ) {
+        file_put_contents( WP_CONTENT_DIR. '/uploads/espresso/logs/espresso_recurrence_plugin_activation_errors.html', ob_get_contents() );
+    }    
+}
+add_action('activated_plugin', 'espresso_recurrence_plugin_activation_errors'); 
