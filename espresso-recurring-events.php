@@ -49,8 +49,7 @@ function ee_recurring_load_pue_update() {
 	}
 }
 
-register_activation_hook( __FILE__, 'event_espresso_re_install' );
-register_deactivation_hook( __FILE__, 'event_espresso_re_deactivate' );
+
 
 global $wpdb;
 define( "EVENT_ESPRESSO_RECURRENCE_TABLE", $wpdb->prefix . 'events_recurrence');
@@ -60,27 +59,20 @@ define( "EVENT_ESPRESSO_RECURRENCE_FULL_URL", WP_PLUGIN_URL . EVENT_ESPRESSO_REC
 define( "EVENT_ESPRESSO_RECURRENCE_MODULE_ACTIVE", TRUE );
 define( "EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION", '1.1.7' );
 
-
 /*
  * Used for display, you can use any of the php date formats (http://php.net/manual/en/function.date.php) *
  */
 
 define( "EVENT_ESPRESSO_RECURRENCE_DATE_FORMAT", 'D, m/d/Y' );
 
-if ( !function_exists( 'event_espresso_re_install' ) )
-{
 
 
-    function event_espresso_re_install() {
 
+if ( !function_exists( 'event_espresso_re_install' )) {
+	function event_espresso_re_install() {
 
-        update_option( 'event_espresso_re_version', EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION );
-        update_option( 'event_espresso_re_active', 1 );
-        global $wpdb;
-
+        $table_name = "events_recurrence";
         $table_version = EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION;
-
-        $table_name = $wpdb->prefix . "events_recurrence";
 		$sql = "CREATE TABLE " . $table_name . " (
 	               `recurrence_id` int(11) NOT NULL AUTO_INCREMENT,
                       `recurrence_start_date` date NOT NULL,
@@ -99,48 +91,32 @@ if ( !function_exists( 'event_espresso_re_install' ) )
                       PRIMARY KEY (`recurrence_id`),
                       UNIQUE KEY `recurrence_id` (`recurrence_id`))";
 
-        if ( $wpdb->get_var( "show tables like '$table_name'" ) != $table_name )
-        {
+		if ( ! function_exists( 'event_espresso_run_install' )) {
+			require_once( EVENT_ESPRESSO_PLUGINFULLPATH . 'includes/functions/database_install.php' ); 		
+		}
+		event_espresso_run_install ($table_name, $table_version, $sql);
 
-
-
-
-            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-            dbDelta( $sql );
-
-            update_option( $table_name . "_tbl_version", $table_version );
-            update_option( $table_name . "_tbl", $table_name );
-        }
-
-		 $installed_ver = get_option( $table_name.'_tbl_version' );
-	     if( $installed_ver != $table_version ) {
-			$sql_create_table = "CREATE TABLE " . $table_name . " ( " . $sql . " ) ;";
-	      	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-	     	dbDelta($sql_create_table);
-	     	update_option( $table_name.'_tbl_version', $table_version );
-	      }
+        update_option( 'event_espresso_re_version', EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION );
+        update_option( 'event_espresso_re_active', 1 );
+ 
     }
-
 }
-
-if ( !function_exists( 'event_espresso_re_deactivate' ) )
-{
+register_activation_hook( __FILE__, 'event_espresso_re_install' );
 
 
+
+if ( !function_exists( 'event_espresso_re_deactivate' )) {
     function event_espresso_re_deactivate() {
-
         update_option( 'event_espresso_re_active', 0 );
     }
-
 }
-
-add_action( 'wp_ajax_show_recurring_dates', 'recurring_days' );
-
-if ( !function_exists( 'recurring_days' ) )
-{
+register_deactivation_hook( __FILE__, 'event_espresso_re_deactivate' );
 
 
+
+if ( !function_exists( 'recurring_days' )){
     function recurring_days() {
+ 	
         global $wpdb;
 
         if ($_POST['recurrence_start_date']=='' || $_POST['recurrence_end_date'] =='' || $_POST['recurrence_regis_start_date']=='' || $_POST['recurrence_regis_end_date'] == '')
@@ -164,21 +140,20 @@ if ( !function_exists( 'recurring_days' ) )
             'recurrence_id' => $_POST['recurrence_id']
         );
 
-
-
-        if ( $_POST['recurrence_apply_changes_to'] == 3 )
-        {
+        if ( $_POST['recurrence_apply_changes_to'] == 3 ) {
             // This and upcoming events based on recurrence id and start_date >=start_date
             $re_params['start_date'] = $_POST['start_date'];
         }
         $recurrence_dates = find_recurrence_dates( $re_params );
         //print_r($recurrence_dates);
         echo recurrence_table( $recurrence_dates, __( "Projected recurrences of this event.", 'event_espresso' ), 1 );
-
         die();
+	 
     }
-
 }
+add_action( 'wp_ajax_show_recurring_dates', 'recurring_days' );
+
+
 
 function espresso_re_styles(){
 	if (isset($_REQUEST['page'])) {
