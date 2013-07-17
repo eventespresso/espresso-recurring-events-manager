@@ -4,7 +4,7 @@
   Plugin URI: http://eventespresso.com/
   Description: Recurring Events addon for Event Espresso.
 
-  Version: 1.1.7
+  Version: 1.1.8.b
 
   Author: Event Espresso
   Author URI: http://www.eventespresso.com
@@ -37,13 +37,18 @@ function ee_recurring_load_pue_update() {
 		require(EVENT_ESPRESSO_PLUGINFULLPATH . 'class/pue/pue-client.php' );
 		$api_key = $org_options['site_license_key'];
 		$host_server_url = 'http://eventespresso.com';
-		$plugin_slug = 'espresso-recurring';
+		$plugin_slug = array(
+      'premium' => array('p', 'espresso-recurring'),
+      'prerelease' => array('b', 'espresso-recurring-pr')
+      );
 		$options = array(
 			'apikey' => $api_key,
 			'lang_domain' => 'event_espresso',
 			'checkPeriod' => '24',
 			'option_key' => 'site_license_key',
-      'options_page_slug' => 'event_espresso'
+      'options_page_slug' => 'event_espresso',
+      'plugin_basename' => plugin_basename(dirname(__FILE__)),
+      'use_wp_update' => FALSE, //if TRUE then you want FREE versions of the plugin to be updated from WP
 		);
 		$check_for_updates = new PluginUpdateEngineChecker($host_server_url, $plugin_slug, $options); //initiate the class and start the plugin update engine!
 	}
@@ -58,7 +63,7 @@ define( "EVENT_ESPRESSO_RECURRENCE_PATH", "/" . plugin_basename( dirname( __FILE
 define( "EVENT_ESPRESSO_RECURRENCE_FULL_PATH", WP_PLUGIN_DIR . EVENT_ESPRESSO_RECURRENCE_PATH );
 define( "EVENT_ESPRESSO_RECURRENCE_FULL_URL", WP_PLUGIN_URL . EVENT_ESPRESSO_RECURRENCE_PATH );
 define( "EVENT_ESPRESSO_RECURRENCE_MODULE_ACTIVE", TRUE );
-define( "EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION", '1.1.7' );
+define( "EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION", '1.1.8.b' );
 
 
 /*
