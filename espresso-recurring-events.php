@@ -38,8 +38,8 @@ function ee_recurring_load_pue_update() {
 		$api_key = $org_options['site_license_key'];
 		$host_server_url = 'http://eventespresso.com';
 		$plugin_slug = array(
-      'premium' => array('p', 'espresso-recurring'),
-      'prerelease' => array('b', 'espresso-recurring-pr')
+      'premium' => array('p' => 'espresso-recurring'),
+      'prerelease' => array('b' => 'espresso-recurring-pr')
       );
 		$options = array(
 			'apikey' => $api_key,
