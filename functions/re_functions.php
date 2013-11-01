@@ -45,13 +45,13 @@ function add_recurrence_master_record() {
                                         recurrence_manual_dates
                                         ) ';
 
-    $SQL .= ' VALUES (' . "'" . $wpdb->escape( $_POST['recurrence_start_date'] ) . "', " . "'" . $wpdb->escape( $_POST['recurrence_event_end_date'] ) . "', " . "'" . $wpdb->escape( $_POST['recurrence_end_date'] ) . "', ";
-    $SQL .= "'" . $wpdb->escape( $_POST['recurrence_regis_start_date'] ) . "', " . "'" . $wpdb->escape( $_POST['recurrence_regis_end_date'] ) . "', ";
-    $SQL .= "'" . $wpdb->escape( $_POST['recurrence_type'] ) . "', ";
-    $SQL .= "'" . $wpdb->escape( $_POST['recurrence_frequency'] ) . "', " . "'" . $wpdb->escape( $_POST['recurrence_interval'] ) . "', ";
+    $SQL .= ' VALUES (' . "'" . esc_sql( $_POST['recurrence_start_date'] ) . "', " . "'" . esc_sql( $_POST['recurrence_event_end_date'] ) . "', " . "'" . esc_sql( $_POST['recurrence_end_date'] ) . "', ";
+    $SQL .= "'" . esc_sql( $_POST['recurrence_regis_start_date'] ) . "', " . "'" . esc_sql( $_POST['recurrence_regis_end_date'] ) . "', ";
+    $SQL .= "'" . esc_sql( $_POST['recurrence_type'] ) . "', ";
+    $SQL .= "'" . esc_sql( $_POST['recurrence_frequency'] ) . "', " . "'" . esc_sql( $_POST['recurrence_interval'] ) . "', ";
     $SQL .= "'" . $recurrence_weekday . "', ";
-    $SQL .= "'" . $wpdb->escape( $_POST['recurrence_repeat_by'] ) . "',";
-    $SQL .= "'" . $wpdb->escape( $_POST['recurrence_regis_date_increment'] ) . "',";
+    $SQL .= "'" . esc_sql( $_POST['recurrence_repeat_by'] ) . "',";
+    $SQL .= "'" . esc_sql( $_POST['recurrence_regis_date_increment'] ) . "',";
     $SQL .= "'" . $recurrence_manual_dates . "')";
 
     $wpdb->query( $SQL );
