@@ -4,7 +4,7 @@
   Plugin URI: http://eventespresso.com/
   Description: Recurring Events addon for Event Espresso.
 
-  Version: 1.1.8.b
+  Version: 1.1.9-DEV
 
   Author: Event Espresso
   Author URI: http://www.eventespresso.com
@@ -63,7 +63,7 @@ define( "EVENT_ESPRESSO_RECURRENCE_PATH", "/" . plugin_basename( dirname( __FILE
 define( "EVENT_ESPRESSO_RECURRENCE_FULL_PATH", WP_PLUGIN_DIR . EVENT_ESPRESSO_RECURRENCE_PATH );
 define( "EVENT_ESPRESSO_RECURRENCE_FULL_URL", WP_PLUGIN_URL . EVENT_ESPRESSO_RECURRENCE_PATH );
 define( "EVENT_ESPRESSO_RECURRENCE_MODULE_ACTIVE", TRUE );
-define( "EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION", '1.1.8.b' );
+define( "EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION", '1.1.9-DEV' );
 
 
 /*
