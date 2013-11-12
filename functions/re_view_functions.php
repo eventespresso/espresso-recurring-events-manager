@@ -355,7 +355,7 @@ function event_espresso_re_form( $recurrence_id = null ) {
                                             //GLOBAL
                                             function get_recurrence_change(){
 
-                                                var ajax_loader_img = '<img src="' + '<?php echo EVENT_ESPRESSO_RECURRENCE_FULL_URL ?>' + 'images/ajax-loader.gif" alt="Recurring Event" />';
+                                                var ajax_loader_img = '<img class="ee-ajax-loader-img" src="' + '<?php echo EVENT_ESPRESSO_RECURRENCE_FULL_URL ?>' + 'images/ajax-loader.gif" alt="Recurring Event" />';
 
                                                 /*var rm = jeere('#recurrence_message');
                                                                             if( !rm.is(':visible') ){
