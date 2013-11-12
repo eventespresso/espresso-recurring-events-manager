@@ -54,8 +54,7 @@ function ee_recurring_load_pue_update() {
 	}
 }
 
-register_activation_hook( __FILE__, 'event_espresso_re_install' );
-register_deactivation_hook( __FILE__, 'event_espresso_re_deactivate' );
+
 
 global $wpdb;
 define( "EVENT_ESPRESSO_RECURRENCE_TABLE", $wpdb->prefix . 'events_recurrence');
@@ -72,73 +71,61 @@ define( "EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION", '1.1.9-DEV' );
 
 define( "EVENT_ESPRESSO_RECURRENCE_DATE_FORMAT", 'D, m/d/Y' );
 
-if ( !function_exists( 'event_espresso_re_install' ) ){
 
-    function event_espresso_re_install() {
+
+
+if ( !function_exists( 'event_espresso_re_install' )) {
+	function event_espresso_re_install() {
 
         update_option( 'event_espresso_re_version', EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION );
         update_option( 'event_espresso_re_active', 1 );
         global $wpdb;
 
+        $table_name = "events_recurrence";
         $table_version = EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION;
+		$sql = "recurrence_id int(11) NOT NULL AUTO_INCREMENT,
+                      recurrence_start_date date NOT NULL,
+                      recurrence_event_end_date date NOT NULL,
+                      recurrence_end_date date NOT NULL,
+                      recurrence_regis_start_date date NOT NULL,
+                      recurrence_regis_end_date date NOT NULL,
+                      recurrence_frequency tinytext NOT NULL,
+                      recurrence_interval tinyint(4) NOT NULL,
+                      recurrence_weekday varchar(255) NOT NULL,
+                      recurrence_type tinytext NOT NULL,
+                      recurrence_repeat_by tinytext NOT NULL,
+                      recurrence_regis_date_increment tinytext NOT NULL,
+                      recurrence_manual_dates LONGTEXT NULL,
+                      recurrence_visibility varchar(2) DEFAULT NULL,
+                      PRIMARY KEY  (recurrence_id),
+                      UNIQUE KEY  recurrence_id (recurrence_id)";
 
-        $table_name = $wpdb->prefix . "events_recurrence";
-		$sql = "CREATE TABLE " . $table_name . " (
-	               `recurrence_id` int(11) NOT NULL AUTO_INCREMENT,
-                      `recurrence_start_date` date NOT NULL,
-                      `recurrence_event_end_date` date NOT NULL,
-                      `recurrence_end_date` date NOT NULL,
-                      `recurrence_regis_start_date` date NOT NULL,
-                      `recurrence_regis_end_date` date NOT NULL,
-                      `recurrence_frequency` tinytext NOT NULL,
-                      `recurrence_interval` tinyint(4) NOT NULL,
-                      `recurrence_weekday` varchar(255) NOT NULL,
-                      `recurrence_type` tinytext NOT NULL,
-                      `recurrence_repeat_by` tinytext NOT NULL,
-                      `recurrence_regis_date_increment` tinytext NOT NULL,
-                      `recurrence_manual_dates` LONGTEXT NULL,
-                      `recurrence_visibility` varchar(2) DEFAULT NULL,
-                      PRIMARY KEY (`recurrence_id`),
-                      UNIQUE KEY `recurrence_id` (`recurrence_id`))";
+		if ( ! function_exists( 'event_espresso_run_install' )) {
+			require_once( EVENT_ESPRESSO_PLUGINFULLPATH . 'includes/functions/database_install.php' ); 		
+		}
+		event_espresso_run_install ($table_name, $table_version, $sql);
 
-        if ( $wpdb->get_var( "show tables like '$table_name'" ) != $table_name )
-        {
-
-
-
-
-            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-            dbDelta( $sql );
-
-            update_option( $table_name . "_tbl_version", $table_version );
-            update_option( $table_name . "_tbl", $table_name );
-        }
-
-		 $installed_ver = get_option( $table_name.'_tbl_version' );
-	     if( $installed_ver != $table_version ) {
-			$sql_create_table = "CREATE TABLE " . $table_name . " ( " . $sql . " ) ;";
-	      	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-	     	dbDelta($sql_create_table);
-	     	update_option( $table_name.'_tbl_version', $table_version );
-	      }
+        update_option( 'event_espresso_re_version', EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION );
+        update_option( 'event_espresso_re_active', 1 );
+ 
     }
-
 }
+register_activation_hook( __FILE__, 'event_espresso_re_install' );
 
-if ( !function_exists( 'event_espresso_re_deactivate' ) ){
 
+
+if ( !function_exists( 'event_espresso_re_deactivate' )) {
     function event_espresso_re_deactivate() {
-
         update_option( 'event_espresso_re_active', 0 );
     }
-
 }
+register_deactivation_hook( __FILE__, 'event_espresso_re_deactivate' );
 
-add_action( 'wp_ajax_show_recurring_dates', 'recurring_days' );
 
-if ( !function_exists( 'recurring_days' ) ){
 
+if ( !function_exists( 'recurring_days' )){
     function recurring_days() {
+ 	
         global $wpdb;
 
         if (empty($_POST['recurrence_start_date']) || empty($_POST['recurrence_end_date']) || empty($_POST['recurrence_regis_start_date']) || empty($_POST['recurrence_regis_end_date'])){exit("Continue selecting fields.");}
@@ -149,8 +136,8 @@ if ( !function_exists( 'recurring_days' ) ){
             'start_date' => isset($_POST['recurrence_start_date']) && !empty($_POST['recurrence_start_date']) ? $_POST['recurrence_start_date'] : '',
             'event_end_date' => isset($_POST['recurrence_event_end_date']) && !empty($_POST['recurrence_event_end_date']) ? $_POST['recurrence_event_end_date'] : '',
             'end_date' => isset($_POST['recurrence_end_date']) && !empty($_POST['recurrence_end_date']) ? $_POST['recurrence_end_date'] : '',
-            'registration_start' => $_POST['recurrence_regis_start_date'],
-            'registration_end' => $_POST['recurrence_regis_end_date'],
+            'registration_start' => isset($_POST['recurrence_regis_start_date']) && !empty($_POST['recurrence_regis_start_date']) ? $_POST['recurrence_regis_start_date'] : '',
+            'registration_end' => isset($_POST['recurrence_regis_end_date']) && !empty($_POST['recurrence_regis_end_date']) ? $_POST['recurrence_regis_end_date'] : '',
             'type' => isset($_POST['recurrence_type']) && !empty($_POST['recurrence_type']) ? $_POST['recurrence_type'] : '',
             'frequency' => isset($_POST['recurrence_frequency']) && !empty($_POST['recurrence_frequency']) ? $_POST['recurrence_frequency'] : '',
             'interval' => isset($_POST['recurrence_interval']) && !empty($_POST['recurrence_interval']) ? $_POST['recurrence_interval'] : '',
@@ -170,11 +157,13 @@ if ( !function_exists( 'recurring_days' ) ){
         $recurrence_dates = find_recurrence_dates( $re_params );
         //print_r($recurrence_dates);
         echo recurrence_table( $recurrence_dates, __( "Projected recurrences of this event.", 'event_espresso' ), 1 );
-
         die();
+	 
     }
-
 }
+add_action( 'wp_ajax_show_recurring_dates', 'recurring_days' );
+
+
 
 function espresso_re_styles(){
 	if (isset($_REQUEST['page'])) {
@@ -186,3 +175,19 @@ function espresso_re_styles(){
 	}
 }
 add_action('admin_print_styles', 'espresso_re_styles');
+
+
+
+
+/**
+ *         captures plugin activation errors for debugging
+ *
+ *         @access public
+ *         @return void
+ */
+function espresso_recurrence_plugin_activation_errors() {
+    if ( WP_DEBUG === TRUE ) {
+        file_put_contents( WP_CONTENT_DIR. '/uploads/espresso/logs/espresso_recurrence_plugin_activation_errors.html', ob_get_contents() );
+    }    
+}
+add_action('activated_plugin', 'espresso_recurrence_plugin_activation_errors'); 
