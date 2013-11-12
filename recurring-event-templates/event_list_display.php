@@ -56,7 +56,7 @@ $first_event_excerpt = array_shift(explode('<!--more-->', html_entity_decode($fi
                         echo event_date_display($e['start_date'], 'l, F j, Y');
                     endif;
                     if ($num_attendees >= $e['reg_limit']) : 
-                        echo ' Sold Out</span> <a href="'.get_option('siteurl').'/?page_id='.$e['event_page_id'].'&e_reg=register&event_id='.$e['overflow_event_id'].'&name_of_event='.stripslashes_deep($e['event_name']).'">'.__('(Join Waiting List)').'</a>';
+                        echo ' Sold Out</span> <a href="'.get_option('siteurl').'/?page_id='.$e['event_page_id'].'&ee='.$e['overflow_event_id'].'">'.__('(Join Waiting List)').'</a>';
                     else :
                         echo '</a>';
                     endif;
@@ -81,7 +81,7 @@ $first_event_excerpt = array_shift(explode('<!--more-->', html_entity_decode($fi
         <?php $num_attendees = get_number_of_attendees_reg_limit($first_event_instance['event_id'], 'num_attendees'); ?>
         <?php if ($num_attendees >= $events_group[0]['reg_limit']) : ?>
             
-            <p><span class="error">Sold Out</span> <a href="<?php echo get_option('siteurl')?>/?page_id=<?php echo $first_event_instance['event_page_id']?>&e_reg=register&event_id=<?php echo $first_event_instance['overflow_event_id']?>&name_of_event=<?php echo stripslashes_deep($first_event_instance['event_name'])?>" title="<?php echo stripslashes_deep($first_event_instance['event_name'])?>"><?php _e('Join Waiting List', 'event_espresso'); ?></a></p> 
+            <p><span class="error">Sold Out</span> <a href="<?php echo get_option('siteurl')?>/?page_id=<?php echo $first_event_instance['event_page_id']?>&ee=<?php echo $first_event_instance['overflow_event_id']?>" title="<?php echo stripslashes_deep($first_event_instance['event_name'])?>"><?php _e('Join Waiting List', 'event_espresso'); ?></a></p> 
             
         <?php else : ?>
             

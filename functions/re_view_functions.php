@@ -122,7 +122,7 @@ function event_espresso_re_form( $recurrence_id = null ) {
                         <a class="thickbox" href="#TB_inline?height=300&width=400&inlineId=info_reg_formula"><img src="<?php echo EVENT_ESPRESSO_PLUGINFULLURL ?>/images/question-frame.png" width="16" height="16" /></a>
                         <br /><span>
 
-                            <input type="radio" name="recurrence_regis_date_increment" value="N" <?php echo $recurrence_edit_mode && $recurrence_regis_date_increment == 'N' ? 'checked="checked"' : ''; ?> />
+                            <input type="radio" name="recurrence_regis_date_increment" value="N" checked="checked" <?php echo $recurrence_edit_mode && $recurrence_regis_date_increment == 'N' ? 'checked="checked"' : ''; ?> />
 
                             <?php _e( "No (each event's registration start and end dates will be incremented according to a formula).", 'event_espresso' ); ?>
                             </span><br />
@@ -355,7 +355,7 @@ function event_espresso_re_form( $recurrence_id = null ) {
                                             //GLOBAL
                                             function get_recurrence_change(){
 
-                                                var ajax_loader_img = '<img src="' + '<?php echo EVENT_ESPRESSO_RECURRENCE_FULL_URL ?>' + 'images/ajax-loader.gif" alt="Recurring Event" />';
+                                                var ajax_loader_img = '<img class="ee-ajax-loader-img" src="' + '<?php echo EVENT_ESPRESSO_RECURRENCE_FULL_URL ?>' + 'images/ajax-loader.gif" alt="Recurring Event" />';
 
                                                 /*var rm = jeere('#recurrence_message');
                                                                             if( !rm.is(':visible') ){

@@ -98,8 +98,7 @@ if (!function_exists('event_espresso_get_event_details')) {
 		
 		$sql .= $show_recurrence == 'false' ? " AND e.recurrence_id = '0' " : '';
 		$sql .= " GROUP BY e.id ";
-		//this bit broke up the recurring events ticket #539
-		//$sql .= $order_by != 'NULL' ? " ORDER BY " . $order_by . " ASC " : " ORDER BY date(start_date), id ASC ";
+		$sql .= $order_by != 'NULL' ? " ORDER BY " . $order_by . " ASC " : " ORDER BY e.recurrence_id, date(start_date) ASC ";
 		$sql .= $limit > 0 ? ' LIMIT 0, '.$limit : '';  
 		
 		//echo $sql;
@@ -287,3 +286,14 @@ if (!function_exists('event_espresso_get_event_details')) {
 	espresso_registration_footer();
 	}
 }
+
+function espresso_hide_recurring_events() {
+    if( wp_script_is( 'jquery', 'done' ) ) {
+    ?>
+    <script type="text/javascript">
+    	jQuery('.subpage_excerpt .date_picker').css({'display': 'none'});
+    </script>
+    <?php
+    }
+}
+add_action( 'wp_footer', 'espresso_hide_recurring_events' );
