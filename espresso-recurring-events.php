@@ -46,9 +46,9 @@ function ee_recurring_load_pue_update() {
 			'lang_domain' => 'event_espresso',
 			'checkPeriod' => '24',
 			'option_key' => 'site_license_key',
-      'options_page_slug' => 'event_espresso',
-      'plugin_basename' => plugin_basename(__FILE__),
-      'use_wp_update' => FALSE, //if TRUE then you want FREE versions of the plugin to be updated from WP
+			'options_page_slug' => 'event_espresso',
+			'plugin_basename' => plugin_basename(__FILE__),
+			'use_wp_update' => FALSE, //if TRUE then you want FREE versions of the plugin to be updated from WP
 		);
 		$check_for_updates = new PluginUpdateEngineChecker($host_server_url, $plugin_slug, $options); //initiate the class and start the plugin update engine!
 	}
