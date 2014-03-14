@@ -445,12 +445,13 @@ function get_difference( $start_date, $end_date, $format = 4 ) {
 
         case 5: // Difference in Months
             //return floor( $seconds_difference / 60 / 60 / 24 / 7 / 4 );
-            $diff = abs(strtotime($end_date) - strtotime($start_date));
-
-            $years = floor($diff / (365*60*60*24));
-
-            return floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
-
+            //$diff = abs(strtotime($end_date) - strtotime($start_date));
+            //$years = floor($diff / (365*60*60*24));
+            //return floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+            
+            //(seconds_difference / months) + 1 to include final event.
+            return floor( $seconds_difference / ((60*60*24*365)/12))+1;
+            
         default: // Difference in Years
             return floor( $seconds_difference / 365 / 60 / 60 / 24 );
     }
