@@ -128,11 +128,11 @@ function event_espresso_re_form( $recurrence_id = null ) {
                             </span><br />
                             <span>
                                 <input type="radio" name="recurrence_regis_date_increment" value="Y" <?php echo $recurrence_edit_mode && $recurrence_regis_date_increment == 'Y' ? 'checked="checked"' : ''; ?>/>
-                            <?php _e( "Yes (all created events are available for registration between the above registration dates).", 'event_espresso' ); ?>
+                                <?php _e( "Yes (all created events are available for registration between the above registration dates).", 'event_espresso' ); ?>
                             </span><br />
                             <span>
                                 <input type="checkbox" name="recurrence_expire_event_start" value="Y" id="recurrence_expire_event_start"/>
-                            <?php _e( "Registration closes on event start date", 'event_espresso' ); ?>
+                                <?php _e( "Registration closes on event start date", 'event_espresso' ); ?>
                             </span>
                         </p>
                     </li>
@@ -399,7 +399,7 @@ function event_espresso_re_form( $recurrence_id = null ) {
                                                     recurrence_regis_date_increment: jeere("input[name='recurrence_regis_date_increment']:checked").val(),
                                                     recurrence_apply_changes_to: jeere("input[name='recurrence_apply_changes_to']:checked").val(),
                                                     recurrence_visibility: jeere("input[name='recurrence_visibility']").val(),
-                                                    recurrence_id: jeere("input[name='recurrence_id']").val()
+                                                    recurrence_id: jeere("input[name='recurrence_id']").val(),
                                                     recurrence_expire_event_start: jeere("input[name='recurrence_expire_event_start']:checked").val()
                                                 };
 
