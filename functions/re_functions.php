@@ -312,7 +312,12 @@ function find_recurrence_dates( $params = array( ) ) {
                     $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( "+$i month", strtotime( $registration_end ) ) );
                 }else{
                     $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( $registration_start ) );
-                    $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
+                    
+                    if ($recurrence_expire_event_start == 'Y') {
+                        $recurrence_dates[$recurrence_date]['registration_end'] = $recurrence_date;
+                    } else {
+                        $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
+                    }
                 }
 
             }
@@ -343,13 +348,11 @@ function find_recurrence_dates( $params = array( ) ) {
                     $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( "+$i month", strtotime( $registration_end ) ) );
                 }else{
                     $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( $registration_start ) );
-                    if ($recurrence_expire_event_start == 'Y')
-                    {
+                   
+                    if ($recurrence_expire_event_start == 'Y') {
                         $recurrence_dates[$recurrence_date]['registration_end'] = $recurrence_date;
-                    }
-                    else
-                    {
-                    $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
+                    } else {
+                        $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
                     }
                 }
                 
