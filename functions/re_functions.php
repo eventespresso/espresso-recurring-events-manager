@@ -555,7 +555,7 @@ function week_in_the_month( $date ) {
 
     $date_year = date( "Y", strtotime( $date ) );
     $month = date( "m", strtotime( $date ) );
-
+    
     /*
      *  Find the number of weeks that are in the month and year of the given date
      */
@@ -617,7 +617,6 @@ function week_in_the_month_new( $date ) {
 
     $date_year = date( "Y", strtotime( $date ) );
     $month = date( "m", strtotime( $date ) );
-
     /*
      *  Find the number of weeks that are in the month and year of the given date
      */
@@ -628,22 +627,22 @@ function week_in_the_month_new( $date ) {
     {
 
         case 1:
-			$week_in_the_month = "this " . $weekday;
+			$week_in_the_month = "first " . $weekday;
             break;
         case $num_weeks:
             $week_in_the_month = "last " . $weekday;
             break;
         case 2:
-			$week_in_the_month = "first " . $weekday;
-            break;
-        case 3:
 			$week_in_the_month = "second " . $weekday;
             break;
-        case 4:
+        case 3:
 			$week_in_the_month = "third " . $weekday;
             break;
-        case 5:
+        case 4:
 			$week_in_the_month = "fourth " . $weekday;
+            break;
+        case 5:
+            $week_in_the_month = "fifth " . $weekday;
             break;
         default:
             break;
