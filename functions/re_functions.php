@@ -462,7 +462,8 @@ function get_difference( $start_date, $end_date, $format = 4 ) {
             return floor( $seconds_difference / 60 / 60 );
 
         case 3: // Difference in Days
-            return floor( $seconds_difference / 60 / 60 / 24 );
+            //return floor( $seconds_difference / 60 / 60 / 24 );
+            return round( $seconds_difference / 60 / 60 / 24 );
 
         case 4: // Difference in Weeks
             return floor( $seconds_difference / 60 / 60 / 24 / 7 );
@@ -534,21 +535,6 @@ function week_number( $date ) {
  */
 function week_in_the_month( $date ) {
 
-	$version = explode('.', PHP_VERSION);
-	if ( count($version) > 2 )
-	{
-		if ( $version[0] >= 5 && $version[1] >= 0 && $version[2] >= 2 )
-		{
-			return week_in_the_month_new ( $date );
-		}
-	}
-	elseif( count($version) > 1 )
-	{
-		if ( $version[0] >= 5 && $version[1] > 0  )
-		{
-			return week_in_the_month_new( $date );		
-		}
-	}
     $week = week_number( $date );
 
     $weekday = date( "l", strtotime( $date ) );
@@ -559,7 +545,6 @@ function week_in_the_month( $date ) {
     /*
      *  Find the number of weeks that are in the month and year of the given date
      */
-
     $num_weeks = num_weeks( $date_year, $date_month, 0 );
 
     switch ( $week )
@@ -568,86 +553,25 @@ function week_in_the_month( $date ) {
         case 1:
             $week_in_the_month = "first " . $weekday;
             break;
-
         case $num_weeks:
             $week_in_the_month = "last " . $weekday;
             break;
-
         case 2:
-
             $week_in_the_month = "second " . $weekday;
-
             break;
         case 3:
-
             $week_in_the_month = "third " . $weekday;
-
             break;
         case 4:
-
             $week_in_the_month = "fourth " . $weekday;
-
             break;
-        case 5:
-
-            $week_in_the_month = "fifth " . $weekday;
-
+        case ($week >=5):
+            $week_in_the_month = "last " . $weekday;
             break;
 
        default:
             break;
     }
-
-    return $week_in_the_month;
-}
-
-/**
- * Due to php version change older format is no longer valid. So, this function is added as adapter to return value valid for new version
- * Returns a string representation of the day in the particular week.  Example, first Monday.
- *
- * @access	public
- * @param	date
- * @return	string
- */
-function week_in_the_month_new( $date ) {
-
-    $week = week_number( $date );
-
-    $weekday = date( "l", strtotime( $date ) );
-
-    $date_year = date( "Y", strtotime( $date ) );
-    $month = date( "m", strtotime( $date ) );
-    /*
-     *  Find the number of weeks that are in the month and year of the given date
-     */
-
-    $num_weeks = num_weeks( $date_year, $date_month, 0 );
-
-    switch ( $week )
-    {
-
-        case 1:
-			$week_in_the_month = "first " . $weekday;
-            break;
-        case $num_weeks:
-            $week_in_the_month = "last " . $weekday;
-            break;
-        case 2:
-			$week_in_the_month = "second " . $weekday;
-            break;
-        case 3:
-			$week_in_the_month = "third " . $weekday;
-            break;
-        case 4:
-			$week_in_the_month = "fourth " . $weekday;
-            break;
-        case 5:
-            $week_in_the_month = "fifth " . $weekday;
-            break;
-        default:
-            break;
-    }
-
     return $week_in_the_month;
 }
 
