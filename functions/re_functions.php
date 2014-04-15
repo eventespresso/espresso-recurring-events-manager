@@ -235,7 +235,7 @@ function find_recurrence_dates( $params = array( ) ) {
         $individual_event_duration = get_difference( $start_date, $event_end_date, 3 ); //in days
 
         for ( $i = 0; $i <= $week_difference; $i = $i + $interval ) {
-
+            
             //Iterate through each one of the weeks
             $recurrence_week = date( "Y-m-d", strtotime( "+$i week ", strtotime( $start_date ) ) );
 
@@ -301,15 +301,15 @@ function find_recurrence_dates( $params = array( ) ) {
         if ( $repeat_by == 'dom' ){
 
             for ( $i = 0; $i <= $month_difference; $i = $i + $interval ) {
-                $recurrence_date = date( "Y-m-d", strtotime( "+$i month", strtotime( $start_date ) ) );
+                $recurrence_date = date( "Y-m-d", ee_get_x_months_to_the_future( strtotime( $start_date ), $i ) );
 
                 $recurrence_dates[$recurrence_date]['start_date'] = $recurrence_date;
                 $recurrence_dates[$recurrence_date]['recurrence_id'] = $params['recurrence_id'];
                 $recurrence_dates[$recurrence_date]['event_end_date'] = $event_end_date =='' ? $recurrence_date :date( "Y-m-d", strtotime( "+$individual_event_duration day", strtotime( $recurrence_date ) ) );
                 
                 if ( $recurrence_regis_date_increment == 'N' ){
-                    $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( "+$i month", strtotime( $registration_start ) ) );
-                    $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( "+$i month", strtotime( $registration_end ) ) );
+                    $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", ee_get_x_months_to_the_future( strtotime( $registration_start ), $i ) );
+                    $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", ee_get_x_months_to_the_future( strtotime( $registration_end ), $i ) );
                 }else{
                     $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( $registration_start ) );
                     
@@ -325,9 +325,9 @@ function find_recurrence_dates( $params = array( ) ) {
             /* get the string representation of the weekday of the first event date */
             $week_number = week_in_the_month( $start_date );
 
-            for ( $i = 0; $i < $month_difference; $i = $i + $interval ) {
+            for ( $i = 0; $i <= $month_difference; $i = $i + $interval ) {
 
-                $next_month = date( "F Y", strtotime( "+$i month", strtotime( $start_date ) ) );
+                $next_month = date( "F Y", ee_get_x_months_to_the_future( strtotime( $start_date ), $i ) );
                 /* find the next event date */
                 $recurrence_date = date( "Y-m-d", strtotime( "$week_number of $next_month" ) );
 				$of_check = strtotime($recurrence_date);
@@ -344,8 +344,8 @@ function find_recurrence_dates( $params = array( ) ) {
                 if ( $recurrence_regis_date_increment == 'N' )
                 {
 
-                    $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( "+$i month", strtotime( $registration_start ) ) );
-                    $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( "+$i month", strtotime( $registration_end ) ) );
+                    $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", ee_get_x_months_to_the_future( strtotime( $registration_start ), $i ) );
+                    $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", ee_get_x_months_to_the_future( strtotime( $registration_end ), $i ) );
                 }else{
                     $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( $registration_start ) );
                    
@@ -475,7 +475,7 @@ function get_difference( $start_date, $end_date, $format = 4 ) {
             //return floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
             
             //(seconds_difference / months) + 1 to include final event.
-            return floor( $seconds_difference / ((60*60*24*365)/12))+1;
+            return floor( $seconds_difference / ((60*60*24*365)/12));
             
         default: // Difference in Years
             return floor( $seconds_difference / 365 / 60 / 60 / 24 );
@@ -590,6 +590,24 @@ function echo_f( $d, $v ) {
     }
     echo "</pre>";
 }
+
+function ee_get_x_months_to_the_future( $base_time = null, $months = 1 )
+{
+    if (is_null($base_time)) {
+        $base_time = time();
+    }
+
+    $x_months_to_the_future    = strtotime( "+" . $months . " months", $base_time );
+    
+    $month_before              = (int) date( "m", $base_time ) + 12 * (int) date( "Y", $base_time );
+    $month_after               = (int) date( "m", $x_months_to_the_future ) + 12 * (int) date( "Y", $x_months_to_the_future );
+    
+    if ($month_after > $months + $month_before) {
+        $x_months_to_the_future = strtotime( date("Ym01His", $x_months_to_the_future) . " -1 day" );
+    }
+
+    return $x_months_to_the_future;
+} //ee_get_x_months_to_the_future()
 
 /* End of file re_functions.php */
 /* Location: plugins/espresso_recurring_events/functions/re_functions.php */
