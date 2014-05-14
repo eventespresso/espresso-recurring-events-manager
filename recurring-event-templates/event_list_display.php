@@ -55,8 +55,12 @@ $first_event_excerpt = array_shift(explode('<!--more-->', html_entity_decode($fi
                     else : 
                         echo event_date_display($e['start_date'], 'l, F j, Y');
                     endif;
-                    if ($num_attendees >= $e['reg_limit']) : 
-                        echo ' Sold Out</span> <a href="'.get_option('siteurl').'/?page_id='.$e['event_page_id'].'&ee='.$e['overflow_event_id'].'">'.__('(Join Waiting List)').'</a>';
+                    if ($num_attendees >= $e['reg_limit']) :
+                        echo ' Sold Out</span>';
+                        if($e['allow_overflow'] == 'Y' && $e['overflow_event_id'] != 0) :
+                            $registration_url = espresso_reg_url($e['overflow_event_id']);
+                            echo '<a href="' . $registration_url . '">'.__('(Join Waiting List)').'</a>';
+                        endif;
                     else :
                         echo '</a>';
                     endif;

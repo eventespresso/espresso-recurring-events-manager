@@ -261,6 +261,7 @@ if (!function_exists('event_espresso_get_event_details')) {
                                 'end_date' => $end_date,
                                 'reg_limit' => $reg_limit,
                                 'registration_url' => $registration_url,
+                                'allow_overflow' =>$allow_overflow,
                                 'overflow_event_id' => $overflow_event_id
                             );
     					    array_push($events_of_same_type[$events_type_index], $event_data);
