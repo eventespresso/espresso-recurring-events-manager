@@ -4,12 +4,12 @@
   Plugin URI: http://eventespresso.com/
   Description: Recurring Events addon for Event Espresso.
 
-  Version: 1.1.8.p
+  Version: 1.1.9.p
 
   Author: Event Espresso
   Author URI: http://www.eventespresso.com
 
-  Copyright (c) 2013 Event Espresso  All Rights Reserved.
+  Copyright (c) 2014 Event Espresso  All Rights Reserved.
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ function ee_recurring_load_pue_update() {
 		$api_key = $org_options['site_license_key'];
 		$host_server_url = 'http://eventespresso.com';
 		$plugin_slug = array(
-    	'premium' => array('p' => 'espresso-recurring'),
+    		'premium' => array('p' => 'espresso-recurring'),
 		'prerelease' => array('b' => 'espresso-recurring-pr')
       );
 		$options = array(
@@ -62,7 +62,7 @@ define( "EVENT_ESPRESSO_RECURRENCE_PATH", "/" . plugin_basename( dirname( __FILE
 define( "EVENT_ESPRESSO_RECURRENCE_FULL_PATH", WP_PLUGIN_DIR . EVENT_ESPRESSO_RECURRENCE_PATH );
 define( "EVENT_ESPRESSO_RECURRENCE_FULL_URL", WP_PLUGIN_URL . EVENT_ESPRESSO_RECURRENCE_PATH );
 define( "EVENT_ESPRESSO_RECURRENCE_MODULE_ACTIVE", TRUE );
-define( "EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION", '1.1.8.p' );
+define( "EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION", '1.1.9.p' );
 
 
 /*
