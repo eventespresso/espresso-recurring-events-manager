@@ -4,12 +4,12 @@
   Plugin URI: http://eventespresso.com/
   Description: Recurring Events addon for Event Espresso.
 
-  Version: 1.1.9-DEV
+  Version: 1.2.0-DEV
 
   Author: Event Espresso
   Author URI: http://www.eventespresso.com
 
-  Copyright (c) 2010 Event Espresso  All Rights Reserved.
+  Copyright (c) 2014 Event Espresso  All Rights Reserved.
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -38,8 +38,8 @@ function ee_recurring_load_pue_update() {
 		$api_key = $org_options['site_license_key'];
 		$host_server_url = 'http://eventespresso.com';
 		$plugin_slug = array(
-      'premium' => array('p' => 'espresso-recurring'),
-      'prerelease' => array('b' => 'espresso-recurring-pr')
+    		'premium' => array('p' => 'espresso-recurring'),
+		'prerelease' => array('b' => 'espresso-recurring-pr')
       );
 		$options = array(
 			'apikey' => $api_key,
@@ -62,7 +62,7 @@ define( "EVENT_ESPRESSO_RECURRENCE_PATH", "/" . plugin_basename( dirname( __FILE
 define( "EVENT_ESPRESSO_RECURRENCE_FULL_PATH", WP_PLUGIN_DIR . EVENT_ESPRESSO_RECURRENCE_PATH );
 define( "EVENT_ESPRESSO_RECURRENCE_FULL_URL", WP_PLUGIN_URL . EVENT_ESPRESSO_RECURRENCE_PATH );
 define( "EVENT_ESPRESSO_RECURRENCE_MODULE_ACTIVE", TRUE );
-define( "EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION", '1.1.9-DEV' );
+define( "EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION", '1.2.0-DEV' );
 
 
 /*
@@ -84,21 +84,21 @@ if ( !function_exists( 'event_espresso_re_install' )) {
         $table_name = "events_recurrence";
         $table_version = EVENT_ESPRESSO_RECURRENCE_MODULE_VERSION;
 		$sql = "recurrence_id int(11) NOT NULL AUTO_INCREMENT,
-                      recurrence_start_date date NOT NULL,
-                      recurrence_event_end_date date NOT NULL,
-                      recurrence_end_date date NOT NULL,
-                      recurrence_regis_start_date date NOT NULL,
-                      recurrence_regis_end_date date NOT NULL,
-                      recurrence_frequency tinytext NOT NULL,
-                      recurrence_interval tinyint(4) NOT NULL,
-                      recurrence_weekday varchar(255) NOT NULL,
-                      recurrence_type tinytext NOT NULL,
-                      recurrence_repeat_by tinytext NOT NULL,
-                      recurrence_regis_date_increment tinytext NOT NULL,
-                      recurrence_manual_dates LONGTEXT NULL,
-                      recurrence_visibility varchar(2) DEFAULT NULL,
-                      PRIMARY KEY  (recurrence_id),
-                      UNIQUE KEY  recurrence_id (recurrence_id)";
+			recurrence_start_date date NOT NULL,
+			recurrence_event_end_date date NOT NULL,
+			recurrence_end_date date NOT NULL,
+			recurrence_regis_start_date date NOT NULL,
+			recurrence_regis_end_date date NOT NULL,
+			recurrence_frequency tinytext NOT NULL,
+			recurrence_interval tinyint(4) NOT NULL,
+			recurrence_weekday varchar(255) NOT NULL,
+			recurrence_type tinytext NOT NULL,
+			recurrence_repeat_by tinytext NOT NULL,
+			recurrence_regis_date_increment tinytext NOT NULL,
+			recurrence_manual_dates LONGTEXT NULL,
+			recurrence_visibility varchar(2) DEFAULT NULL,
+			PRIMARY KEY  (recurrence_id),
+			UNIQUE KEY  recurrence_id (recurrence_id)";
 
 		if ( ! function_exists( 'event_espresso_run_install' )) {
 			require_once( EVENT_ESPRESSO_PLUGINFULLPATH . 'includes/functions/database_install.php' ); 		

@@ -168,6 +168,7 @@ function recurrence_form_modified( $params = array( ) ) {
 function find_recurrence_dates( $params = array( ) ) {
 
     extract( $params );
+    $recurrence_expire_event_start = !empty($_POST['recurrence_expire_event_start']) ? $_POST['recurrence_expire_event_start'] : 'N';
 
     $start_date = date( "Y-m-d", strtotime( $start_date ) ); //just in case it comes in in another format
     $recurrence_dates = array( );
@@ -199,7 +200,14 @@ function find_recurrence_dates( $params = array( ) ) {
                 $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( "+$i day", strtotime( $registration_end ) ) );
             }else{
                 $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( $registration_start ) );
+                if ($recurrence_expire_event_start == 'Y')
+                {
+                    $recurrence_dates[$recurrence_date]['registration_end'] = $recurrence_date;
+                }
+                else
+                {
                 $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
+                }
             }
 				
 		}
@@ -227,7 +235,7 @@ function find_recurrence_dates( $params = array( ) ) {
         $individual_event_duration = get_difference( $start_date, $event_end_date, 3 ); //in days
 
         for ( $i = 0; $i <= $week_difference; $i = $i + $interval ) {
-
+            
             //Iterate through each one of the weeks
             $recurrence_week = date( "Y-m-d", strtotime( "+$i week ", strtotime( $start_date ) ) );
 
@@ -260,7 +268,14 @@ function find_recurrence_dates( $params = array( ) ) {
                         $recurrence_dates[$recurrence_date_new]['registration_end'] = date( "Y-m-d", strtotime( "+$recurrance_date_difference day", strtotime( $registration_end ) ) );
                     }else{
                         $recurrence_dates[$recurrence_date_new]['registration_start'] = date( "Y-m-d", strtotime( $registration_start ) );
+                        if ($recurrence_expire_event_start == 'Y')
+                        {
+                            $recurrence_dates[$recurrence_date_new]['registration_end'] = $recurrence_date_new;
+                        }
+                        else
+                        {
                         $recurrence_dates[$recurrence_date_new]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
+                        }
                     }
                     
                 }
@@ -286,18 +301,23 @@ function find_recurrence_dates( $params = array( ) ) {
         if ( $repeat_by == 'dom' ){
 
             for ( $i = 0; $i <= $month_difference; $i = $i + $interval ) {
-                $recurrence_date = date( "Y-m-d", strtotime( "+$i month", strtotime( $start_date ) ) );
+                $recurrence_date = date( "Y-m-d", ee_get_x_months_to_the_future( strtotime( $start_date ), $i ) );
 
                 $recurrence_dates[$recurrence_date]['start_date'] = $recurrence_date;
                 $recurrence_dates[$recurrence_date]['recurrence_id'] = $params['recurrence_id'];
                 $recurrence_dates[$recurrence_date]['event_end_date'] = $event_end_date =='' ? $recurrence_date :date( "Y-m-d", strtotime( "+$individual_event_duration day", strtotime( $recurrence_date ) ) );
                 
                 if ( $recurrence_regis_date_increment == 'N' ){
-                    $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( "+$i month", strtotime( $registration_start ) ) );
-                    $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( "+$i month", strtotime( $registration_end ) ) );
+                    $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", ee_get_x_months_to_the_future( strtotime( $registration_start ), $i ) );
+                    $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", ee_get_x_months_to_the_future( strtotime( $registration_end ), $i ) );
                 }else{
                     $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( $registration_start ) );
-                    $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
+                    
+                    if ($recurrence_expire_event_start == 'Y') {
+                        $recurrence_dates[$recurrence_date]['registration_end'] = $recurrence_date;
+                    } else {
+                        $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
+                    }
                 }
 
             }
@@ -305,9 +325,9 @@ function find_recurrence_dates( $params = array( ) ) {
             /* get the string representation of the weekday of the first event date */
             $week_number = week_in_the_month( $start_date );
 
-            for ( $i = 0; $i < $month_difference; $i = $i + $interval ) {
+            for ( $i = 0; $i <= $month_difference; $i = $i + $interval ) {
 
-                $next_month = date( "F Y", strtotime( "+$i month", strtotime( $start_date ) ) );
+                $next_month = date( "F Y", ee_get_x_months_to_the_future( strtotime( $start_date ), $i ) );
                 /* find the next event date */
                 $recurrence_date = date( "Y-m-d", strtotime( "$week_number of $next_month" ) );
 				$of_check = strtotime($recurrence_date);
@@ -324,12 +344,16 @@ function find_recurrence_dates( $params = array( ) ) {
                 if ( $recurrence_regis_date_increment == 'N' )
                 {
 
-                    $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( "+$i month", strtotime( $registration_start ) ) );
-                    $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( "+$i month", strtotime( $registration_end ) ) );
+                    $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", ee_get_x_months_to_the_future( strtotime( $registration_start ), $i ) );
+                    $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", ee_get_x_months_to_the_future( strtotime( $registration_end ), $i ) );
                 }else{
-
                     $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( $registration_start ) );
-                    $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
+                   
+                    if ($recurrence_expire_event_start == 'Y') {
+                        $recurrence_dates[$recurrence_date]['registration_end'] = $recurrence_date;
+                    } else {
+                        $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
+                    }
                 }
                 
             }
@@ -438,19 +462,21 @@ function get_difference( $start_date, $end_date, $format = 4 ) {
             return floor( $seconds_difference / 60 / 60 );
 
         case 3: // Difference in Days
-            return floor( $seconds_difference / 60 / 60 / 24 );
+            //return floor( $seconds_difference / 60 / 60 / 24 );
+            return round( $seconds_difference / 60 / 60 / 24 );
 
         case 4: // Difference in Weeks
             return floor( $seconds_difference / 60 / 60 / 24 / 7 );
 
         case 5: // Difference in Months
             //return floor( $seconds_difference / 60 / 60 / 24 / 7 / 4 );
-            $diff = abs(strtotime($end_date) - strtotime($start_date));
-
-            $years = floor($diff / (365*60*60*24));
-
-            return floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
-
+            //$diff = abs(strtotime($end_date) - strtotime($start_date));
+            //$years = floor($diff / (365*60*60*24));
+            //return floor(($diff - $years * 365*60*60*24) / (30*60*60*24));
+            
+            //(seconds_difference / months) + 1 to include final event.
+            return floor( $seconds_difference / ((60*60*24*365)/12));
+            
         default: // Difference in Years
             return floor( $seconds_difference / 365 / 60 / 60 / 24 );
     }
@@ -509,32 +535,16 @@ function week_number( $date ) {
  */
 function week_in_the_month( $date ) {
 
-	$version = explode('.', PHP_VERSION);
-	if ( count($version) > 2 )
-	{
-		if ( $version[0] >= 5 && $version[1] >= 0 && $version[2] >= 2 )
-		{
-			return week_in_the_month_new ( $date );
-		}
-	}
-	elseif( count($version) > 1 )
-	{
-		if ( $version[0] >= 5 && $version[1] > 0  )
-		{
-			return week_in_the_month_new( $date );		
-		}
-	}
     $week = week_number( $date );
 
     $weekday = date( "l", strtotime( $date ) );
 
     $date_year = date( "Y", strtotime( $date ) );
     $month = date( "m", strtotime( $date ) );
-
+    
     /*
      *  Find the number of weeks that are in the month and year of the given date
      */
-
     $num_weeks = num_weeks( $date_year, $date_month, 0 );
 
     switch ( $week )
@@ -543,87 +553,25 @@ function week_in_the_month( $date ) {
         case 1:
             $week_in_the_month = "first " . $weekday;
             break;
-
         case $num_weeks:
             $week_in_the_month = "last " . $weekday;
             break;
-
         case 2:
-
             $week_in_the_month = "second " . $weekday;
-
             break;
         case 3:
-
             $week_in_the_month = "third " . $weekday;
-
             break;
         case 4:
-
             $week_in_the_month = "fourth " . $weekday;
-
             break;
-        case 5:
-
-            $week_in_the_month = "fifth " . $weekday;
-
+        case ($week >=5):
+            $week_in_the_month = "last " . $weekday;
             break;
 
        default:
             break;
     }
-
-    return $week_in_the_month;
-}
-
-/**
- * Due to php version change older format is no longer valid. So, this function is added as adapter to return value valid for new version
- * Returns a string representation of the day in the particular week.  Example, first Monday.
- *
- * @access	public
- * @param	date
- * @return	string
- */
-function week_in_the_month_new( $date ) {
-
-    $week = week_number( $date );
-
-    $weekday = date( "l", strtotime( $date ) );
-
-    $date_year = date( "Y", strtotime( $date ) );
-    $month = date( "m", strtotime( $date ) );
-
-    /*
-     *  Find the number of weeks that are in the month and year of the given date
-     */
-
-    $num_weeks = num_weeks( $date_year, $date_month, 0 );
-
-    switch ( $week )
-    {
-
-        case 1:
-			$week_in_the_month = "this " . $weekday;
-            break;
-        case $num_weeks:
-            $week_in_the_month = "last " . $weekday;
-            break;
-        case 2:
-			$week_in_the_month = "first " . $weekday;
-            break;
-        case 3:
-			$week_in_the_month = "second " . $weekday;
-            break;
-        case 4:
-			$week_in_the_month = "third " . $weekday;
-            break;
-        case 5:
-			$week_in_the_month = "fourth " . $weekday;
-            break;
-        default:
-            break;
-    }
-
     return $week_in_the_month;
 }
 
@@ -642,6 +590,24 @@ function echo_f( $d, $v ) {
     }
     echo "</pre>";
 }
+
+function ee_get_x_months_to_the_future( $base_time = null, $months = 1 )
+{
+    if (is_null($base_time)) {
+        $base_time = time();
+    }
+
+    $x_months_to_the_future    = strtotime( "+" . $months . " months", $base_time );
+    
+    $month_before              = (int) date( "m", $base_time ) + 12 * (int) date( "Y", $base_time );
+    $month_after               = (int) date( "m", $x_months_to_the_future ) + 12 * (int) date( "Y", $x_months_to_the_future );
+    
+    if ($month_after > $months + $month_before) {
+        $x_months_to_the_future = strtotime( date("Ym01His", $x_months_to_the_future) . " -1 day" );
+    }
+
+    return $x_months_to_the_future;
+} //ee_get_x_months_to_the_future()
 
 /* End of file re_functions.php */
 /* Location: plugins/espresso_recurring_events/functions/re_functions.php */
