@@ -35,7 +35,7 @@ function ee_recurring_load_pue_update() {
 		
 	if (file_exists(EVENT_ESPRESSO_PLUGINFULLPATH . 'class/pue/pue-client.php')) { //include the file 
 		require(EVENT_ESPRESSO_PLUGINFULLPATH . 'class/pue/pue-client.php' );
-		$api_key = $org_options['site_license_key'];
+    $api_key = $org_options['site_license_key'];
 		$host_server_url = 'http://eventespresso.com';
 		$plugin_slug = array(
     		'premium' => array('p' => 'espresso-recurring'),
@@ -147,12 +147,14 @@ if ( !function_exists( 'recurring_days' )){
             'recurrence_id' => isset($_POST['recurrence_id']) && !empty($_POST['recurrence_id']) ? $_POST['recurrence_id'] : ''
         );
 
-
-
         if ( isset($_POST['recurrence_apply_changes_to']) && !empty($_POST['recurrence_apply_changes_to']) ? $_POST['recurrence_apply_changes_to'] == 3 : '' )
         {
             // This and upcoming events based on recurrence id and start_date >=start_date
             $re_params['start_date'] = $_POST['start_date'];
+            $re_params['event_end_date'] = $_POST['end_date'];
+            $re_params['registration_start'] = $_POST['registration_start_date'];
+            $re_params['registration_end'] = $_POST['registration_end_date'];
+
         }
         $recurrence_dates = find_recurrence_dates( $re_params );
         //print_r($recurrence_dates);
