@@ -384,6 +384,9 @@ function event_espresso_re_form( $recurrence_id = null ) {
                                                 var data = {
                                                     action: 'show_recurring_dates',
                                                     start_date: jeere("input[name='start_date']").val(),
+                                                    end_date: jeere("input[name=end_date]").val(),
+                                                    registration_start_date: jeere("input[name=registration_start]").val(),
+                                                    registration_end_date: jeere("input[name=registration_end]").val(),
                                                     recurrence_start_date: jeere("input[name='recurrence_start_date']").val(),
                                                     recurrence_event_end_date: jeere("input[name='recurrence_event_end_date']").val(),
                                                     recurrence_end_date: jeere("input[name='recurrence_end_date']").val(),
