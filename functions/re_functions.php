@@ -297,6 +297,8 @@ function find_recurrence_dates( $params = array( ) ) {
         $month_difference = get_difference( $start_date, $end_date, 5 );
 
         $individual_event_duration = get_difference( $start_date, $event_end_date, 3 ); //in days
+
+
         /* if by day of month (i.e. repeats on the same day every month) */
         if ( $repeat_by == 'dom' ){
 
@@ -324,15 +326,19 @@ function find_recurrence_dates( $params = array( ) ) {
         }else{
             /* get the string representation of the weekday of the first event date */
             $week_number = week_in_the_month( $start_date );
+            $registration_end_week_number = week_in_the_month( $registration_end );
+            $registration_duration = get_difference( $registration_start, $registration_end, 3 );
 
             for ( $i = 0; $i <= $month_difference; $i = $i + $interval ) {
 
                 $next_month = date( "F Y", ee_get_x_months_to_the_future( strtotime( $start_date ), $i ) );
+                $next_reg_start_recurrence_start = date( "F Y", ee_get_x_months_to_the_future( strtotime( $registration_start ), $i ) );
+                $next_reg_end_recurrence_end = date( "F Y", ee_get_x_months_to_the_future( strtotime( $registration_end ), $i ) );
                 /* find the next event date */
                 $recurrence_date = date( "Y-m-d", strtotime( "$week_number of $next_month" ) );
 				$of_check = strtotime($recurrence_date);
 				if ( $of_check <= 0 ){
-					$recurrence_date = date( "Y-m-d", strtotime( "$week_number  $next_month" ) );
+					$recurrence_date = date( "Y-m-d", strtotime( "$week_number of $next_month" ) );
 				}
 				$check_again = strtotime($recurrence_date);
 				if ( $check_again <= 0 ){
@@ -343,9 +349,9 @@ function find_recurrence_dates( $params = array( ) ) {
                 
                 if ( $recurrence_regis_date_increment == 'N' )
                 {
-
-                    $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", ee_get_x_months_to_the_future( strtotime( $registration_start ), $i ) );
-                    $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", ee_get_x_months_to_the_future( strtotime( $registration_end ), $i ) );
+                    $recurrance_registration_end = date( "Y-m-d", strtotime( "$registration_end_week_number of $next_reg_end_recurrence_end" ) );
+                    $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( "-$registration_duration day", strtotime($recurrance_registration_end) ));
+                    $recurrence_dates[$recurrence_date]['registration_end'] = $recurrance_registration_end;
                 }else{
                     $recurrence_dates[$recurrence_date]['registration_start'] = date( "Y-m-d", strtotime( $registration_start ) );
                    
