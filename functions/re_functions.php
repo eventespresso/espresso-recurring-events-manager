@@ -72,7 +72,7 @@ function update_recurrence_master_record() {
     //echo_f('',$_POST);
 
     global $wpdb;
-$wpdb->show_errors();
+	$wpdb->show_errors();
     $recurrence_weekday = serialize( $_POST['recurrence_weekday'] );
     $recurrence_manual_dates = $_POST['recurrence_type'] == 'm' ? serialize( $_POST['recurrence_manual_dates']) . serialize($_POST['recurrence_manual_end_dates'] ) : NULL;
 
@@ -330,7 +330,6 @@ function find_recurrence_dates( $params = array( ) ) {
             $registration_duration = get_difference( $registration_start, $registration_end, 3 );
 
             for ( $i = 0; $i <= $month_difference; $i = $i + $interval ) {
-
                 $next_month = date( "F Y", ee_get_x_months_to_the_future( strtotime( $start_date ), $i ) );
                 $next_reg_start_recurrence_start = date( "F Y", ee_get_x_months_to_the_future( strtotime( $registration_start ), $i ) );
                 $next_reg_end_recurrence_end = date( "F Y", ee_get_x_months_to_the_future( strtotime( $registration_end ), $i ) );
@@ -361,7 +360,6 @@ function find_recurrence_dates( $params = array( ) ) {
                         $recurrence_dates[$recurrence_date]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
                     }
                 }
-                
             }
         }
     }
@@ -385,9 +383,9 @@ function find_recurrence_dates( $params = array( ) ) {
  */
 function find_recurrence_manual_dates( $params = array( ) ) {
 //echo_f('p',$params);
-    extract( $params );
-
-
+	extract( $params );
+    $recurrence_expire_event_start = !empty($_POST['recurrence_expire_event_start']) ? $_POST['recurrence_expire_event_start'] : 'N';
+    
     $recurrence_dates = array( );
 
     if ( count( $recurrence_manual_dates ) == 0 )
@@ -397,31 +395,40 @@ function find_recurrence_manual_dates( $params = array( ) ) {
     $recurrence_manual_dates = array_unique( $recurrence_manual_dates );
     $recurrence_manual_end_dates = array_unique( $recurrence_manual_end_dates );
 
-    $start_date = date( "Y-m-d", strtotime( $recurrence_manual_dates[0] ) ); //just in case it comes in in another format
+    if($_POST['recurrence_apply_changes_to'] == 2){
+    	$start_date = date( "Y-m-d", strtotime( $recurrence_manual_dates[0] ) ); //just in case it comes in in another format
+    }
 
-    /*
+     /*
      * Since we already have the first date, for each one of the manually entered dates, we will find the
      * difference in days, and if the user wants to increment the registration dates, we will do so
      * using the date difference.
      *
      */
-
     foreach ( $recurrence_manual_dates as $k => $v ) {
+
+    	if(($_POST['recurrence_apply_changes_to'] == 3) && ($start_date > $v)) {
+    		continue;
+    	}
 
         if ( $v != '' ){
 
-            $date_difference = get_difference( $start_date, $v, 3 );
+        	$date_difference = get_difference( $start_date, $v, 3 );
 
             $recurrence_dates[$v]['recurrence_id'] = $recurrence_id;
             $recurrence_dates[$v]['start_date'] = $v;
-            $recurrence_dates[$v]['event_end_date'] = $recurrence_manual_end_dates[$k] != ''?$recurrence_manual_end_dates[$k]:$v;
+            $recurrence_dates[$v]['event_end_date'] = $recurrence_manual_end_dates[$k] != '' ? $recurrence_manual_end_dates[$k] : $v;
             if ( $recurrence_regis_date_increment == 'N' )
             {
                 $recurrence_dates[$v]['registration_start'] = date( "Y-m-d", strtotime( "+$date_difference day", strtotime( $registration_start ) ) );
                 $recurrence_dates[$v]['registration_end'] = date( "Y-m-d", strtotime( "+$date_difference day", strtotime( $registration_end ) ) );
             }else{
+            	if ($recurrence_expire_event_start == 'Y') {
+                	$recurrence_dates[$v]['registration_end'] = $v;
+                } else {
+                	$recurrence_dates[$v]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
+                }
                 $recurrence_dates[$v]['registration_start'] = date( "Y-m-d", strtotime( $registration_start ) );
-                $recurrence_dates[$v]['registration_end'] = date( "Y-m-d", strtotime( $registration_end ) );
             }
             
         }
@@ -546,21 +553,18 @@ function week_in_the_month( $date ) {
     $weekday = date( "l", strtotime( $date ) );
 
     $date_year = date( "Y", strtotime( $date ) );
-    $month = date( "m", strtotime( $date ) );
+    $date_month = date( "m", strtotime( $date ) );
     
     /*
      *  Find the number of weeks that are in the month and year of the given date
      */
-    $num_weeks = num_weeks( $date_year, $date_month, 0 );
+    //$num_weeks = num_weeks( $date_year, $date_month, 0 );
 
     switch ( $week )
     {
 
         case 1:
             $week_in_the_month = "first " . $weekday;
-            break;
-        case $num_weeks:
-            $week_in_the_month = "last " . $weekday;
             break;
         case 2:
             $week_in_the_month = "second " . $weekday;
@@ -571,6 +575,9 @@ function week_in_the_month( $date ) {
         case 4:
             $week_in_the_month = "fourth " . $weekday;
             break;
+        //case $num_weeks:
+        //    $week_in_the_month = "last " . $weekday;
+        //    break;
         case ($week >=5):
             $week_in_the_month = "last " . $weekday;
             break;
