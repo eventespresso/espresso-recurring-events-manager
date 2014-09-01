@@ -73,8 +73,8 @@ function update_recurrence_master_record() {
 
     global $wpdb;
 	$wpdb->show_errors();
-    $recurrence_weekday = serialize( $_POST['recurrence_weekday'] );
-    $recurrence_manual_dates = $_POST['recurrence_type'] == 'm' ? serialize( $_POST['recurrence_manual_dates']) . serialize($_POST['recurrence_manual_end_dates'] ) : NULL;
+    $recurrence_weekday = !empty($_POST['recurrence_weekday']) ? serialize($_POST['recurrence_weekday']) : '';
+    $recurrence_manual_dates = $_POST['recurrence_type'] == 'm' ? serialize( $_POST['recurrence_manual_dates']) . serialize($_POST['recurrence_manual_end_dates']) : NULL;
 
    return $wpdb->update( EVENT_ESPRESSO_RECURRENCE_TABLE,
             array(
