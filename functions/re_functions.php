@@ -168,7 +168,6 @@ function recurrence_form_modified( $params = array( ) ) {
 function find_recurrence_dates( $params = array( ) ) {
 
     extract( $params );
-    $recurrence_expire_event_start = !empty($_POST['recurrence_expire_event_start']) ? $_POST['recurrence_expire_event_start'] : 'N';
 
     $start_date = date( "Y-m-d", strtotime( $start_date ) ); //just in case it comes in in another format
     $recurrence_dates = array( );
