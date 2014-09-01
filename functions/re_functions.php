@@ -383,7 +383,6 @@ function find_recurrence_dates( $params = array( ) ) {
 function find_recurrence_manual_dates( $params = array( ) ) {
 //echo_f('p',$params);
 	extract( $params );
-	$recurrence_expire_event_start = !empty($_POST['recurrence_expire_event_start']) ? $_POST['recurrence_expire_event_start'] : 'N';
     
     $recurrence_dates = array( );
 
