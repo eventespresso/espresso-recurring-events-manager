@@ -387,6 +387,7 @@ function find_recurrence_manual_dates( $params = array( ) ) {
 	extract( $params );
 
 	$recurrence_expire_event_start = !empty($_POST['recurrence_expire_event_start']) ? $_POST['recurrence_expire_event_start'] : 'N';
+	$recurrence_apply_changes_to = !empty($_POST['recurrence_apply_changes_to']) ? $_POST['recurrence_apply_changes_to'] : '1';
     
     $recurrence_dates = array( );
 
@@ -407,7 +408,7 @@ function find_recurrence_manual_dates( $params = array( ) ) {
      */
     foreach ( $recurrence_manual_dates as $k => $v ) {
 
-	if(($_POST['recurrence_apply_changes_to'] == 3) && ($start_date > $v)) {
+	if(($recurrence_apply_changes_to == 3) && ($start_date > $v)) {
 		continue;
 	}
 
