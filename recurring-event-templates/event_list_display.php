@@ -85,8 +85,13 @@ $first_event_excerpt = array_shift(explode('<!--more-->', html_entity_decode($fi
         <?php $num_attendees = get_number_of_attendees_reg_limit($first_event_instance['event_id'], 'num_attendees'); ?>
         <?php if ($num_attendees >= $events_group[0]['reg_limit']) : ?>
             
-            <p><span class="error">Sold Out</span> <a href="<?php echo get_option('siteurl')?>/?page_id=<?php echo $first_event_instance['event_page_id']?>&ee=<?php echo $first_event_instance['overflow_event_id']?>" title="<?php echo stripslashes_deep($first_event_instance['event_name'])?>"><?php _e('Join Waiting List', 'event_espresso'); ?></a></p> 
-            
+            <p><span class="error">Sold Out</span> 
+            	<?php
+					if($first_event_instance['allow_overflow'] == 'Y' && $first_event_instance['overflow_event_id'] != 0) :
+					$waitlist_url = espresso_reg_url($first_event_instance['overflow_event_id']);
+					echo '<a href="' . $waitlist_url . '">'.__('(Join Waiting List)').'</a>';
+					endif;
+				?>            
         <?php else : ?>
             
             <p><a href="<?php echo $first_event_instance['registration_url']; ?>" title="<?php echo stripslashes_deep($first_event_instance['event_name'])?>"><?php _e('Register Now', 'event_espresso'); ?></a></p>
