@@ -56,7 +56,7 @@ $first_event_excerpt = array_shift(explode('<!--more-->', html_entity_decode($fi
                         echo event_date_display($e['start_date'], 'l, F j, Y');
                     endif;
                     if ($num_attendees >= $e['reg_limit']) :
-                        echo ' Sold Out</span>';
+                        echo ' - ' . __('Sold Out') . '</span>';
                         if($e['allow_overflow'] == 'Y' && $e['overflow_event_id'] != 0) :
                             $registration_url = espresso_reg_url($e['overflow_event_id']);
                             echo '<a href="' . $registration_url . '">'.__('(Join Waiting List)').'</a>';
@@ -85,7 +85,7 @@ $first_event_excerpt = array_shift(explode('<!--more-->', html_entity_decode($fi
         <?php $num_attendees = get_number_of_attendees_reg_limit($first_event_instance['event_id'], 'num_attendees'); ?>
         <?php if ($num_attendees >= $events_group[0]['reg_limit']) : ?>
             
-            <p><span class="error">Sold Out</span> 
+            <p><span class="error"><?php echo __('Sold Out'); ?></span> 
             	<?php
 					if($first_event_instance['allow_overflow'] == 'Y' && $first_event_instance['overflow_event_id'] != 0) :
 					$waitlist_url = espresso_reg_url($first_event_instance['overflow_event_id']);
