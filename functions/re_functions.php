@@ -338,6 +338,7 @@ function find_recurrence_dates( $params = array( ) ) {
 				if ( $check_again <= 0 ){
 					die("Failed to calculate date in Event Espresso > Recurrence Manager > Re-calculation function");
 				}
+                $recurrence_dates[$recurrence_date]['recurrence_id'] = $params['recurrence_id'];
                 $recurrence_dates[$recurrence_date]['start_date'] = $recurrence_date;
                 $recurrence_dates[$recurrence_date]['event_end_date'] = $event_end_date =='' ? $recurrence_date :date( "Y-m-d", strtotime( "+$individual_event_duration day", strtotime( $recurrence_date ) ) );
                 
