@@ -259,7 +259,7 @@ function event_espresso_re_form( $recurrence_id = null ) {
                                 <div id="recurrence_repeat_by" class="">
                                     <h4><?php _e( 'Repeat By:', 'event_espresso' ); ?></h4>
                                     <?php
-                                        if( !$recurrence_edit_mode ) {
+                                        if( !isset( $recurrence_repeat_by ) ) {
                                             $recurrence_repeat_by = 'dom';
                                         }
                                     ?>
