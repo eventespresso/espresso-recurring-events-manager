@@ -491,12 +491,12 @@ function event_espresso_re_form( $recurrence_id = null ) {
                                                 );
                                                     return false;
                                                 });
-                                                jeere('.recurrence_remove_manual_dates').live("click", function(){
+                                                jeere('#recurrence_manual_date_table').on('click', '.recurrence_remove_manual_dates', function(){
 
                                                     //if (confirm('Are you sure?') === false)
                                                     //    return false;
 
-                                                    if(jeere("#recurrence_manual_date_table tr").size() == 1)
+                                                    if(jeere("#recurrence_manual_date_table tr").length == 1)
                                                     {
                                                         alert ("First element can't be deleted.");
                                                         return false;
